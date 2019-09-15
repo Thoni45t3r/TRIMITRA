@@ -1,0 +1,30 @@
+<odoo>
+
+    <record id="view_invoice_customer_sale_form_tis" model="ir.ui.view">
+        <field name="name">account.invoice.customer.sale.tis</field>
+        <field name="model">account.invoice</field>
+        <field name="inherit_id" ref="account.invoice_form"/>
+        <field name="arch" type="xml">
+            <field name="payment_term_id" position="after" >
+            	<field name="multi_so" attrs="{'invisible': [('state', '&lt;&gt;', 'draft')]}" class="oe_edit_only"/>
+                <field name="sale_id" attrs="{'invisible': [('multi_so','=',False)]}" class="oe_edit_only"/>
+            </field>
+            <xpath expr="//field[@name='invoice_line_ids']/tree/field[@name='company_id']" position="after">
+                <field name="so_line_id" invisible="1"/>
+                <field name="sale_id"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_invoice_line_form_inherit_sale_tis" model="ir.ui.view">
+        <field name="name">account.invoice.line.form.inherit.sale.tis</field>
+        <field name="model">account.invoice.line</field>
+        <field name="inherit_id" ref="account.view_invoice_line_form"/>
+        <field name="arch" type="xml">
+            <field name="account_id" position="before">
+                <field name="sale_id"/>
+            </field>
+        </field>
+    </record>
+    
+</odoo>

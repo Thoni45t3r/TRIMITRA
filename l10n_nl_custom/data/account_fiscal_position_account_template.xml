@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <!-- Fiscal Position Account Templates -->
+
+        <!-- NON-EU Countries -->
+        <record
+            id="fiscal_position_account_non_eu_1"
+            model="account.fiscal.position.account.template">
+            <field name="position_id"     ref="fiscal_position_template_non_eu" />
+            <field name="account_src_id"  ref="88080" />
+            <field name="account_dest_id" ref="88090" />
+        </record>
+        <record
+            id="fiscal_position_account_non_eu_2"
+            model="account.fiscal.position.account.template">
+            <field name="position_id"     ref="fiscal_position_template_non_eu" />
+            <field name="account_src_id"  ref="88110" />
+            <field name="account_dest_id" ref="88130" />
+        </record>
+        <record
+            id="fiscal_position_account_non_eu_3"
+            model="account.fiscal.position.account.template">
+            <field name="position_id"     ref="fiscal_position_template_non_eu" />
+            <field name="account_src_id"  ref="88140" />
+            <field name="account_dest_id" ref="88900" />
+        </record>
+        <record
+            id="fiscal_position_account_non_eu_4"
+            model="account.fiscal.position.account.template">
+            <field name="position_id"     ref="fiscal_position_template_non_eu" />
+            <field name="account_src_id"  ref="03050" />
+            <field name="account_dest_id" ref="03110" />
+        </record>
+        <record
+            id="fiscal_position_account_non_eu_5"
+            model="account.fiscal.position.account.template">
+            <field name="position_id"     ref="fiscal_position_template_non_eu" />
+            <field name="account_src_id"  ref="03130" />
+            <field name="account_dest_id" ref="03510" />
+        </record>
+        <record
+            id="fiscal_position_account_non_eu_6"
+            model="account.fiscal.position.account.template">
+            <field name="position_id"     ref="fiscal_position_template_non_eu" />
+            <field name="account_src_id"  ref="03550" />
+            <field name="account_dest_id" ref="04070" />
+        </record>
+
+        <!-- EU Countries -->
+        <record
+            id="fiscal_position_account_eu_1"
+            model="account.fiscal.position.account.template">
+            <field name="position_id"     ref="fiscal_position_template_eu" />
+            <field name="account_src_id"  ref="88080" />
+            <field name="account_dest_id" ref="88090" />
+        </record>
+        <record
+            id="fiscal_position_account_eu_2"
+            model="account.fiscal.position.account.template">
+            <field name="position_id"     ref="fiscal_position_template_eu" />
+            <field name="account_src_id"  ref="88110" />
+            <field name="account_dest_id" ref="88120" />
+        </record>
+        <record
+            id="fiscal_position_account_eu_3"
+            model="account.fiscal.position.account.template">
+            <field name="position_id"     ref="fiscal_position_template_eu" />
+            <field name="account_src_id"  ref="88140" />
+            <field name="account_dest_id" ref="88150" />
+        </record>
+        <record
+            id="fiscal_position_account_eu_4"
+            model="account.fiscal.position.account.template">
+            <field name="position_id"     ref="fiscal_position_template_eu" />
+            <field name="account_src_id"  ref="03050" />
+            <field name="account_dest_id" ref="03051" />
+        </record>
+        <record
+            id="fiscal_position_account_eu_5"
+            model="account.fiscal.position.account.template">
+            <field name="position_id"     ref="fiscal_position_template_eu" />
+            <field name="account_src_id"  ref="03130" />
+            <field name="account_dest_id" ref="03140" />
+        </record>
+        <record
+            id="fiscal_position_account_eu_6"
+            model="account.fiscal.position.account.template">
+            <field name="position_id"     ref="fiscal_position_template_eu" />
+            <field name="account_src_id"  ref="03550" />
+            <field name="account_dest_id" ref="03560" />
+        </record>
+
+    </data>
+</openerp>
