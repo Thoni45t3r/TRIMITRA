@@ -8,7 +8,7 @@
     'company': 'Nikisae',
     'maintainer': 'Ahmad Heriyanto',
     'website': "https://id.linkedin.com/in/ahmadheriyanto ",
-    'depends': ['base', 'sale'],
+    'depends': ['base', 'stock'],
     'data': [],
     'images': [],
     'license': "AGPL-3",
