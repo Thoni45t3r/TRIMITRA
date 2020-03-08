@@ -1,0 +1,17 @@
+{
+    'name': "Quantity Done Editable",
+    'version': '12.0.0.0.1',
+    'summary': """Force Quantity Done Editable""",
+    'description': """Force Quantity Done Editable""",
+    'category': 'Sales',
+    'author': 'Ahmad Heriyanto',
+    'company': 'Nikisae',
+    'maintainer': 'Ahmad Heriyanto',
+    'website': "https://id.linkedin.com/in/ahmadheriyanto ",
+    'depends': ['base', 'sale'],
+    'data': [],
+    'images': [],
+    'license': "AGPL-3",
+    'installable': True,
+    'application': False,
+}
