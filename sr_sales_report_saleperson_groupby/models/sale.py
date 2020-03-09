@@ -47,6 +47,7 @@ class SaleSalespersonReport(models.TransientModel):
                 temp_2 = []
                 temp_2.append(order.name)
                 temp_2.append(order.date_order)
+                temp_2.append(order.partner_id.name)
                 temp_2.append(order.amount_total)
                 temp.append(temp_2)
             final_dict[user] = temp
