@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <report
+            id="report_receipt_menu"
+            string="Tanda Terima Invoice"
+            model="account.invoice"
+            report_type="qweb-pdf"
+            file="account.invoice"
+            name="tanda_terima_invoice.receipt_report"
+        />
+
+        <template id="receipt_report_document">
+            <t t-call="web.html_container">
+                <t t-call="web.external_layout">
+                    <t t-set="doc" t-value="doc.with_context({'lang':doc.partner_id.lang})" />
+                    <div class="page">
+                        <h1>
+                            <span t-field="doc.sequence_number_next_prefix"/><span t-field="doc.sequence_number_next"/>
+                        </h1>
+                    </div>
+                </t>
+            </t>
+        </template>
+
+        <template id="receipt_report">
+            <t t-foreach="docs" t-as="doc">
+                <t t-call="tanda_terima_invoice.receipt_report_document" 
+                    t-lang="doc.partner_id.lang" />
+            </t>
+        </template>
+        
+
+    </data>
+</odoo>
