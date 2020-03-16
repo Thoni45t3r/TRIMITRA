@@ -7,10 +7,8 @@
       <!-- from object -->
       <field name="model">res.partner</field>
       <field name="arch" type="xml">
-        <field name='user_id' position="after">
+        <field name='vat' position="after">
           <field name="credit"/>
-        </field>
-        <field name='property_supplier_payment_term_id' position="after">
           <field name="debit"/>
         </field>
       </field>
