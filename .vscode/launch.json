@@ -2,7 +2,7 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Odoo12",
+            "name": "Addon12",
             "type": "python",
             "request": "launch",
             "stopOnEntry": false,
@@ -10,7 +10,7 @@
             "program": "/home/ahmad/odoo-dev/12/odoo/odoo-bin",
             "args": [
                 "--config",
-                "~/odoo-dev/config/addon12.conf",
+                "/home/ahmad/odoo-dev/config/addon12.conf",
             ],
             "cwd": "/home/ahmad/odoo-dev/custom/12",
             "console": "integratedTerminal",
