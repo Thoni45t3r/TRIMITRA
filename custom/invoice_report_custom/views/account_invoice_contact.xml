@@ -14,22 +14,18 @@
         </field>
     </record>
 
+    <!--
     <record id="res_partner_view_form_private_custom" model="ir.ui.view">
         <field name="name">res_partner_view_form_private_custom</field>
         <field name="model">res.partner</field>
-        <field name="inherit_id" ref="account.view_partner_property_form"/> <!-- "ref="base.view_partner_form"/> -->
+        <field name="inherit_id" ref="account.view_partner_property_form"/>
         <field name="arch" type="xml">
             <xpath expr="//group[@name='accounting_entries']" position="after">
                 <group string="Sales Invoice Document" name="show_in_sales_invoice" groups="account.group_account_user">
                     <field name="show_bank_in_sales_invoice" domain="[('partner_id','=',id)]"/>
                 </group>
             </xpath>
-            <!--
-            <field name="property_account_payable_id" position="after">
-                <field name="show_bank_in_sales_invoice" domain="[('partner_id','=',id)]"/>
-            </field>
-            -->
         </field>
     </record>
-    
+    -->
 </odoo>
