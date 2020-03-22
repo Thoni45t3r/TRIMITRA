@@ -10,7 +10,8 @@
     'website': "https://id.linkedin.com/in/ahmadheriyanto ",
     'depends': ['base', 'account'],
     'data': [
-        "report/invoice.xml",
+        "report/penerimaan_kas.xml",
+        "report/pengeluaran_kas.xml",
     ],
     'images': [],
     'license': "AGPL-3",
