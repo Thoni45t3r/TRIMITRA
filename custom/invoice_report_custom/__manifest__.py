@@ -11,7 +11,7 @@
     'depends': ['base', 'account', 'sale', 'purchase'],
     'data': [
         "views/account_invoice_contact.xml",
-        #"report/invoice_template_custom.xml",
+        "report/invoice_template_custom.xml",
     ],
     'images': [],
     'license': "AGPL-3",

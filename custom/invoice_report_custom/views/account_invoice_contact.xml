@@ -14,7 +14,6 @@
         </field>
     </record>
 
-    <!--
     <record id="res_partner_view_form_private_custom" model="ir.ui.view">
         <field name="name">res_partner_view_form_private_custom</field>
         <field name="model">res.partner</field>
@@ -27,5 +26,5 @@
             </xpath>
         </field>
     </record>
-    -->
+    
 </odoo>
