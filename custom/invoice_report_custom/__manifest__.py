@@ -8,7 +8,7 @@
     'company': 'Nikisae',
     'maintainer': 'Ahmad Heriyanto',
     'website': "https://id.linkedin.com/in/ahmadheriyanto ",
-    'depends': ['base', 'account', 'sale'],
+    'depends': ['base', 'account', 'sale', 'purchase'],
     'data': [
         "views/account_invoice_contact.xml",
         "report/invoice_template_custom.xml",
