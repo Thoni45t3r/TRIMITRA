@@ -1,0 +1,22 @@
+{
+    'name': "Inkaso",
+    'version': '12.0.0.0.1',
+    'summary': """Inkaso""",
+    'description': """Inkaso module""",
+    'category': 'Accounting',
+    'author': 'Ahmad Heriyanto',
+    'company': 'Nikisae',
+    'maintainer': 'Ahmad Heriyanto',
+    'website': "https://id.linkedin.com/in/ahmadheriyanto ",
+    'depends': ['base', 'account', 'sale', 'stock'],
+    'data': [
+        'view/inkaso.xml',
+        'view/menu.xml',
+        #'report/report_inkaso.xml',
+        #'report/isi_inkaso.xml',
+    ],
+    'images': [],
+    'license': "AGPL-3",
+    'installable': True,
+    'application': False,
+}

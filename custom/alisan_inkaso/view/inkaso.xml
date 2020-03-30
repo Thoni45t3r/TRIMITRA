@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>     
+        <record id="alisan_inkaso_list" model="ir.ui.view">
+            <field name="name">alisan_inkaso_list</field>
+            <field name="model">alisan.inkaso</field>
+            <field name="arch" type="xml">
+                <tree string="inkaso List">
+                    <field name='name' attrs="{'readonly':[('state','!=','draft')]}"/>
+                    <field name='create_date' attrs="{'readonly':[('state','!=','draft')]}"/>
+                    <field name='state' attrs="{'readonly':[('state','!=','draft')]}"/>
+                </tree>
+            </field>
+        </record>
+        <record id="alisan_inkaso_form" model="ir.ui.view">
+            <field name="name">alisan_inkaso_form</field>
+            <field name="model">alisan.inkaso</field>
+            <field name="arch" type="xml">
+                <form string="Form inkaso">
+                    <header>
+                        <button string="Confirm" icon="" states="draft" type="object" name="action_confirm" class="oe_highlight"/>
+                        <button string="Done" icon="" states="open" type="object" name="action_cancel"/>
+                        <field name="state" widget="statusbar"/>
+                    </header>
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name='name' attrs="{'readonly':[('state','!=','draft')]}"/>
+                                <field name='salesperson' attrs="{'readonly':[('state','!=','draft')]}"/>
+                                <field name='partner_id' widget="many2many_tags" attrs="{'readonly':[('state','!=','draft')]}"/>
+                                <field name='invoice_id' widget="many2many_tags" attrs="{'readonly':[('state','!=','draft')]}"/>
+                                <field name='create_date' attrs="{'readonly':'True'}"/>
+                            </group>
+                        </group>
+                        <notebook colspan="4">
+                            <page string="Invoices">
+                                <field name="inkaso_invoice_ids">
+                                    <tree string="Invoices" editable="bottom">
+                                        <field name="partner_id"/>
+                                        <field name="invoice_id"/>
+                                        <field name="invoice_amount"/>
+                                        <field name="invoice_residual"/>
+                                        <field name="date_due"/>
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <record id="alisan_inkaso_filter" model="ir.ui.view">
+            <field name="name">inkaso.filter</field>
+            <field name="model">alisan.inkaso</field>
+            <field name="arch" type="xml">
+                <search string="Search inkaso">
+                    <field name="name"/>
+                    <field name="due_date"/>
+                    <field name='state' />
+                    <group expand="0" string="Group By">
+                        <filter string="Partner" icon="terp-camera_test"
+                                name="partner_id" context="{'group_by':'partner_id'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+</odoo>

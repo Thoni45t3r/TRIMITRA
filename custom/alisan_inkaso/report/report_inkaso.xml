@@ -1,0 +1,291 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <report
+            id="report_inkaso_menu"
+            string="Inkaso"
+            model="alisan.inkaso"
+            report_type="qweb-pdf"
+            file="alisan_inkaso.alisan_inkaso_report"
+            name="alisan_inkaso.alisan_inkaso_report"
+        />
+
+        <template id="report_alisan_inkaso_document">
+            <div class="page print" style="font-size: 11px !important; line-height: 1 !important;">
+                <style>
+                    .table-bordered > thead > tr > th,
+                    .table-bordered > tbody > tr > th,
+                    .table-bordered > tfoot > tr > th,
+                    .table-bordered > thead > tr > td,
+                    .table-bordered > tbody > tr > td,
+                    .table-bordered > tfoot > tr > td {
+                       border: 1px solid #000000;
+                    }
+                </style>
+                <t t-foreach="docs" t-as="o">
+                    <div class="row" style="margin: auto;">
+                        <h3 style="text-align: center; margin: auto;">
+                            Alisan Inkaso
+                            <br/>Nomor: <span t-field="o.name"/>
+                        </h3>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-6">
+                            Salesperson : <span t-field="o.salesperson"/>
+                        </div>
+                        <div class="col-xs-6">
+                            Date : <span t-field="o.create_date"/>
+                        </div>
+                    </div>
+                    <br/>
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <table class="table table-bordered">
+                                <tr>
+                                    <td rowspan="2" width="1%">No</td>
+                                    <td rowspan="2" width="8%">Date</td>
+                                    <td rowspan="2" width="8%">Due Date</td>
+                                    <td rowspan="2" width="14%">Invoice</td>
+                                    <td rowspan="2" width="6%">Category</td>
+                                    <td rowspan="2" width="10%">To Pay</td>
+                                    <td rowspan="2" width="10%">Cash</td>
+                                    <td colspan="4">Giro</td>
+                                    <td rowspan="2" width="13%">Total Amount</td>
+                                </tr>
+                                <tr>
+                                    <td width="5%">Bank</td>
+                                    <td width="10%">Nomor</td>
+                                    <td width="10%">Amount</td>
+                                    <td width="8%">Due</td>
+                                </tr>
+                                
+                                <t t-set="foo" t-value="0"/>
+                                <t t-set="bar" t-value="0"/>
+                                <t t-set="overdue" t-value="0"/>
+                                <t t-set="notoverdue" t-value="0"/>
+                                <t t-foreach="o.inkaso_invoice_ids.sorted(key=lambda r: r.partner_id.id)" t-as="ol">
+                                    <t t-if="datetime.datetime.strptime(ol.invoice_id.date_due, '%Y-%m-%d') &gt;= datetime.datetime.today()">
+                                        <t t-set="notoverdue" t-value="notoverdue + ol.invoice_id.residual"/>
+                                    </t>
+                                    <t t-if="datetime.datetime.strptime(ol.invoice_id.date_due, '%Y-%m-%d') &lt; datetime.datetime.today()">
+                                        <t t-set="overdue" t-value="overdue + ol.invoice_id.residual"/>
+                                    </t>
+                                    <t t-set="amount_line" t-value="0"/>
+                                    <t t-if="ol.partner_id.id!=foo">
+                                        <tr>
+                                            <td colspan="12">Debitur :<span t-field="ol.partner_id.ref"/> - <span t-field="ol.partner_id"/> - <span t-field="ol.partner_id.phone"/> </td>
+                                        </tr>
+                                        <t t-set="foo" t-value="ol.partner_id.id"/>
+                                    </t>
+                                    <tr>
+                                        <td>
+                                            <t t-set="bar" t-value="bar+1"/>
+                                            <t t-esc="bar"/>
+                                        </td>
+                                        <td>
+                                            <span t-field="ol.invoice_id.date_invoice"  t-field-options="{&quot;format&quot;: &quot;dd-MM-yy&quot;}"/>
+                                        </td>
+                                        <td>
+                                            <span t-field="ol.invoice_id.date_due"  t-field-options="{&quot;format&quot;: &quot;dd-MM-yy&quot;}"/>
+                                        </td>
+                                        <td>
+                                            <span t-field="ol.invoice_id.number"/>
+                                        </td>
+                                        <td>
+                                            <span t-field="ol.invoice_id.invoice_line_ids[0].product_id.categ_id.item_categ"/>
+                                        </td>
+                                        <td>
+                                            <span t-field="ol.invoice_id.residual"/>
+                                        </td>
+                                        <td>
+                                            
+                                        </td>
+                                        <td>
+                                            <t t-if="ol.invoice_id.giro_invoice_ids">
+                                                <span t-field="ol.invoice_id.giro_invoice_ids[0].giro_id.bank_name"/>
+                                            </t>
+                                        </td>
+                                        <td>
+                                            <t t-if="ol.invoice_id.giro_invoice_ids">
+                                                <span t-field="ol.invoice_id.giro_invoice_ids[0].giro_id.name"/>
+                                            </t>
+                                        </td>
+                                        <td>
+                                            <t t-if="ol.invoice_id.giro_invoice_ids">
+                                                <span t-field="ol.invoice_id.giro_invoice_ids[0].amount"/>
+                                            </t>
+                                        </td>
+                                        <td>
+                                            <t t-if="ol.invoice_id.giro_invoice_ids">
+                                                
+                                            </t>
+                                        </td>
+                                        <td>
+                                        </td>
+                                    </tr>
+                                </t>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <table class="table table-bordered">
+                                <tr>
+                                    <td width="20%">Recap</td>
+                                    <td width="20%">Balance</td>
+                                    <td width="20%">Cash</td>
+                                    <td width="20%">Giro</td>
+                                    <td width="20%">Returned</td>
+                                </tr>
+                                <tr>
+                                    <td>Total Overdue</td>
+                                    <td><t t-esc="'{0:,.2f}'.format(int(overdue))"/></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>Total Not Overdue</td>
+                                    <td><t t-esc="'{0:,.2f}'.format(int(notoverdue))"/></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>Total</td>
+                                    <td><t t-esc="'{0:,.2f}'.format(int(notoverdue + overdue))"/></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-3">
+                            <p>
+                                H-1 SORE PERSIAPAN Jumlah nota disiapkan <t t-esc="bar"/> lbr dengan jumlah
+                            </p>
+                        </div>
+                        <div class="col-xs-3">
+                            <p>
+                                H-0 PAGI Serah Terima telah diterima nota <t t-esc="bar"/> lbr dengan jumlah
+                            </p>
+                        </div>
+                        <div class="col-xs-6">
+                            <p>
+                                H-0 SORE Jumlah nota dikembalikan .... lbr <br/>
+                                Jumlah Giro Disetor .... lbr
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-xs-3">
+                            <table class="table">
+                                <tr>
+                                    <td>Diserahakan Oleh</td>
+                                    <td>Diterima Oleh</td>
+                                </tr>
+                            </table>
+                        </div>
+                        <div class="col-xs-3">
+                            <table class="table">
+                                <tr>
+                                    <td>Diserahakan Oleh</td>
+                                    <td>Diterima Oleh</td>
+                                </tr>
+                            </table>
+                        </div>
+                        <div class="col-xs-6">
+                            <table class="table">
+                                <tr>
+                                    <td>Diserahkan Oleh</td>
+                                    <td>Diperiksa Oleh</td>
+                                    <td>Cash/Giro DIterima</td>
+                                    <td>Nota Oleh</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="row" style="padding-top:1cm">
+                        <div class="col-xs-3">
+                            <table class="table">
+                                <tr>
+                                    <td>
+                                        <span t-field="o.create_uid"/>
+                                    </td>
+                                    <td>
+                                        SPV Sales
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                        <div class="col-xs-3">
+                            <table class="table">
+                                <tr style="margin-top:1cm">
+                                    <td>
+                                        <span t-field="o.create_uid"/>
+                                    </td>
+                                    <td>
+                                        <span t-field="o.salesperson.name"/>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                        <div class="col-xs-6">
+                            <table class="table">
+                                <tr style="margin-top:1cm">
+                                    <td>
+                                        <span t-field="o.salesperson.name"/>
+                                    </td>
+                                    <td>
+                                        SPV Sales
+                                    </td>
+                                    <td>
+                                        Kasir
+                                    </td>
+                                    <td>
+                                        <span t-field="o.create_uid"/>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </t>
+            </div>
+        </template>
+
+        <template id="alisan_inkaso_report">
+            <t t-call="report.html_container">
+                <t t-foreach="docs" t-as="doc">
+                    <t t-call="alisan_inkaso.report_alisan_inkaso_document"
+                       t-lang="doc.create_uid.lang"/>
+                </t>
+            </t>
+        </template>
+
+        <record id="inkaso_paperformat" model="report.paperformat">
+            <field name="name">Inkaso Paper Format</field>
+            <field name="default" eval="False" />
+            <field name="format">custom</field>
+            <field name="page_height">260</field>
+            <field name="page_width">210</field>
+            <field name="orientation">Portrait</field>
+            <field name="margin_top">7</field>
+            <field name="margin_bottom">0</field>
+            <field name="margin_left">8</field>
+            <field name="margin_right">4</field>
+            <field name="header_line" eval="False" />
+            <field name="header_spacing">0</field>
+            <field name="dpi">90</field>
+        </record>
+
+        <record id="report_inkaso_menu" model="ir.actions.report.xml">
+            <field name="paperformat_id" ref="alisan_inkaso.inkaso_paperformat"/>
+        </record>
+
+        
+    </data>
+</odoo>
