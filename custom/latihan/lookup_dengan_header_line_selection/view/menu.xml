@@ -1,7 +1,7 @@
 <odoo>
-		<record id="action_inkaso_list" model="ir.actions.act_window">
-			<field name="name">List Inkaso</field>
-			<field name="res_model">alisan.inkaso</field>
+		<record id="action_collection_list" model="ir.actions.act_window">
+			<field name="name">Collection List</field>
+			<field name="res_model">collection</field>
 			<field name="view_type">form</field>
 			<field name="view_mode">tree,form</field>
 			<field name="help" type="html">
@@ -13,9 +13,9 @@
             </field>
 		</record>
 
-		<menuitem id="alisan_inkaso_menu"
-			 action="action_inkaso_list"
-			 name="inkaso"
+		<menuitem id="collection_menu"
+			 action="action_collection_list"
+			 name="Collection"
 			 parent="account.menu_finance_receivables"
 			 sequence="99"/>
 </odoo>

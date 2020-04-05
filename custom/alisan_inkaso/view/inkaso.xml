@@ -11,6 +11,7 @@
                 </tree>
             </field>
         </record>
+
         <record id="alisan_inkaso_form" model="ir.ui.view">
             <field name="name">alisan_inkaso_form</field>
             <field name="model">alisan.inkaso</field>
@@ -18,26 +19,26 @@
                 <form string="Form inkaso">
                     <header>
                         <button string="Confirm" icon="" states="draft" type="object" name="action_confirm" class="oe_highlight"/>
-                        <button string="Done" icon="" states="open" type="object" name="action_cancel"/>
+                        <button string="Done" icon="" states="open" type="object" name="action_done"/>
+                        <button string="Cancel" icon="" states="open,close" type="object" name="action_cancel"/>
                         <field name="state" widget="statusbar"/>
                     </header>
                     <sheet>
                         <group>
-                            <group>
-                                <field name='name' attrs="{'readonly':[('state','!=','draft')]}"/>
-                                <field name='salesperson' attrs="{'readonly':[('state','!=','draft')]}"/>
-                                <field name='partner_id' widget="many2many_tags" attrs="{'readonly':[('state','!=','draft')]}"/>
-                                <field name='invoice_id' widget="many2many_tags" attrs="{'readonly':[('state','!=','draft')]}"/>
-                                <field name='create_date' attrs="{'readonly':'True'}"/>
-                            </group>
+                            <field name="name" attrs="{'readonly':[('state','!=','draft')]}"/>
+                            <field name="salesperson" attrs="{'readonly':[('state','!=','draft')]}"/>
+                            <field name='create_date' attrs="{'readonly':1}"/> <!-- create_date ini field bawaan system odoo dibagian model -->
+                            <field name='line_sum'/>
+                            <field name='residual_line_sum'/>
                         </group>
                         <notebook colspan="4">
                             <page string="Invoices">
-                                <field name="inkaso_invoice_ids">
+                                <field name="inkaso_invoice_ids" attrs="{'readonly':[('state','!=','draft')]}">
                                     <tree string="Invoices" editable="bottom">
-                                        <field name="partner_id"/>
                                         <field name="invoice_id"/>
+                                        <field name="partner_id"/>
                                         <field name="invoice_amount"/>
+                                        <field name="category"/>
                                         <field name="invoice_residual"/>
                                         <field name="date_due"/>
                                     </tree>
@@ -45,22 +46,127 @@
                             </page>
                         </notebook>
                     </sheet>
+                    
                 </form>
             </field>
         </record>
-        <record id="alisan_inkaso_filter" model="ir.ui.view">
-            <field name="name">inkaso.filter</field>
-            <field name="model">alisan.inkaso</field>
-            <field name="arch" type="xml">
-                <search string="Search inkaso">
-                    <field name="name"/>
-                    <field name="due_date"/>
-                    <field name='state' />
-                    <group expand="0" string="Group By">
-                        <filter string="Partner" icon="terp-camera_test"
-                                name="partner_id" context="{'group_by':'partner_id'}"/>
-                    </group>
-                </search>
-            </field>
-        </record>
+
+        <!-- Report -->
+        <report
+            id="report_inkaso"
+            string="Inkaso"
+            model="alisan.inkaso"
+            report_type="qweb-pdf"
+            file="alisan.inkaso"
+            name="alisan_inkaso.report_inkaso_template"
+        />
+
+        <template id="report_inkaso_template">
+            <t t-call="web.html_container">
+                <t t-foreach="docs" t-as="o">
+                    <t t-set="lang" t-value="o.create_uid.sudo().lang"/>
+                    <t t-call="alisan_inkaso.report_inkaso_document" t-lang="lang"/>
+                </t>
+            </t>
+        </template>
+
+        <template id="report_inkaso_document">
+            <t t-call="web.external_layout">
+                <t t-set="o" t-value="o.with_context(lang=lang)" />
+                <div class="page">
+                    <h2 style="width: 100%; text-align: center;"><u>DAFTAR TAGIHAN SALES</u></h2>
+                    <h2 style="width: 100%; text-align: center;"><span t-field="o.name"/></h2>
+                    <div style="width: 100%; text-align: right;">ID Sales: <span t-field="o.salesperson"/></div> <!--t-field="o.create_date"-->
+                    <div style="width: 100%; text-align: right;">Tanggal : <span t-field="o.create_date" t-options="{'widget': 'date','format': 'dd MMM yyyy'}"/></div>
+                    <table style="width: 100%; padding: 10px; border: 1px solid black; border-collapse: collapse;">
+                        <tr>
+                            <td rowspan="2" style="padding: 10px; border: 1px solid black; border-collapse: collapse;"><b>No.</b></td>
+                            <td rowspan="2" style="padding: 10px; border: 1px solid black; border-collapse: collapse;"><b>No. Invoice</b></td>
+                            <td rowspan="2" style="padding: 10px; border: 1px solid black; border-collapse: collapse;"><b>Nama Toko</b></td>
+                            <td rowspan="2" style="padding: 10px; border: 1px solid black; border-collapse: collapse;"><b>Category Code</b></td>
+                            <td rowspan="2" style="padding: 10px; border: 1px solid black; border-collapse: collapse;"><b>Posting Date</b></td>
+                            <td rowspan="2" style="padding: 10px; border: 1px solid black; border-collapse: collapse;"><b>Total Tagihan</b></td>
+                            <td rowspan="2" style="padding: 10px; border: 1px solid black; border-collapse: collapse;"><b>Sisa Tagihan</b></td>
+                            <td rowspan="2" style="padding: 10px; border: 1px solid black; border-collapse: collapse;"><b>Jatuh Tempo</b></td>
+                            <td colspan="2" style="padding: 10px; border: 1px solid black; border-collapse: collapse;"><b>Pembayaran</b></td>
+                            <td rowspan="2" style="padding: 10px; border: 1px solid black; border-collapse: collapse;"><b>Keterangan</b></td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 10px; border: 1px solid black; border-collapse: collapse;"><b>Tunai_____</b></td>
+                            <td style="padding: 10px; border: 1px solid black; border-collapse: collapse;"><b>BG________</b></td>
+                        </tr>
+                        <t t-set="i" t-value="0"/>
+                        <t t-set="total_sum_invoice" t-value="0"/>
+                        <t t-set="total_sum_residual" t-value="0"/>
+                        <t t-foreach="o.inkaso_invoice_ids" t-as="line">
+                            <t t-set="i" t-value="i+1"/>
+                            <t t-set="total_sum_invoice" t-value="total_sum_invoice + line.invoice_id.amount_total"/>
+                            <t t-set="total_sum_residual" t-value="total_sum_residual + line.invoice_id.residual"/>
+                            <tr>
+                                <td style="padding: 10px; border: 1px solid black; border-collapse: collapse;"><t t-esc="i"/></td>
+                                <td style="padding: 10px; border: 1px solid black; border-collapse: collapse;"><span t-field="line.invoice_id.number"/></td>
+                                <td style="padding: 10px; border: 1px solid black; border-collapse: collapse;"><span t-field="line.invoice_id.partner_id.name"/></td>
+                                <td style="padding: 10px; border: 1px solid black; border-collapse: collapse;"><span t-field="line.category"/></td>
+                                <td style="padding: 10px; border: 1px solid black; border-collapse: collapse;"><span t-field="line.invoice_id.date_invoice" t-options="{'widget': 'date','format': 'dd MMM yyyy'}"/></td>
+                                <td style="padding: 10px; border: 1px solid black; border-collapse: collapse; text-align: right;"><span t-field="line.invoice_id.amount_total"/></td>
+                                <td style="padding: 10px; border: 1px solid black; border-collapse: collapse; text-align: right;"><span t-field="line.invoice_id.residual"/></td>
+                                <td style="padding: 10px; border: 1px solid black; border-collapse: collapse;"><span t-field="line.invoice_id.date_due" t-options="{'widget': 'date','format': 'dd MMM yyyy'}"/></td>
+                                <td style="padding: 10px; border: 1px solid black; border-collapse: collapse;">&#160;</td>
+                                <td style="padding: 10px; border: 1px solid black; border-collapse: collapse;">&#160;</td>
+                                <td style="padding: 10px; border: 1px solid black; border-collapse: collapse;">&#160;</td>
+                            </tr>                            
+                        </t>
+                        <tr>
+                            <td colspan="5" style="padding: 10px; border: 1px solid black; border-collapse: collapse;">Total</td>
+                            <td style="padding: 10px; border: 1px solid black; border-collapse: collapse; text-align: right;">Rp <span t-esc="'{0:,.2f}'.format(total_sum_invoice).replace(',','.')" style="float:right"/></td>
+                            <td style="padding: 10px; border: 1px solid black; border-collapse: collapse; text-align: right;">Rp <span t-esc="'{0:,.2f}'.format(total_sum_residual).replace(',','.')" style="float:right"/></td>
+                            <td colspan="4" style="padding: 10px; border: 1px solid black; border-collapse: collapse;">&#160;</td>
+                        </tr>
+                    </table>
+                    <p/>
+                    
+                    <table>
+                        <tr>
+                            <td>Total Tagihan yang di bawa</td>
+                            <td>:</td>
+                            <td><t t-esc="i"/></td>
+                        </tr>
+                        <tr>
+                            <td>Total Nominal Tagihan</td>
+                            <td>:</td>
+                            <td>Rp <span t-esc="'{0:,.2f}'.format(total_sum_invoice).replace(',','.')" style="float:right"/></td>
+                        </tr>
+                        <tr>
+                            <td>Total Nominal Sisa Tagihan</td>
+                            <td>:</td>
+                            <td>Rp <span t-esc="'{0:,.2f}'.format(total_sum_residual).replace(',','.')" style="float:right"/></td>
+                        </tr>
+                        <tr>
+                            <td>Hasil Tagihan</td>
+                            <td>:</td>
+                            <td>_______________________________________</td>
+                        </tr>
+                    </table>
+                    <p/>
+                    <div style="width: 100%; text-align: left;">Bandar Lampung,_______________________________________</div>
+                    <p/>
+                    <table style="width: 100%;">
+                        <tr style="width: 100%;">
+                            <td style="width: 33%; padding: 10px; text-align: center;">Dibuat oleh,</td>
+                            <td style="width: 34%; padding: 10px; text-align: center;">Diperiksa oleh,</td>
+                            <td style="width: 33%; padding: 10px; text-align: center;">Diterima oleh,</td>
+                        </tr>
+                        <tr><td colspan="3">&#160;</td></tr>
+                        <tr><td colspan="3">&#160;</td></tr>
+                        <tr><td colspan="3">&#160;</td></tr>
+                        <tr style="width: 100%;">
+                            <td style="width: 33%; padding: 10px; text-align: center;">_______________________________________</td>
+                            <td style="width: 34%; padding: 10px; text-align: center;">_______________________________________</td>
+                            <td style="width: 33%; padding: 10px; text-align: center;">_______________________________________</td>
+                        </tr>
+                    </table>
+                </div>
+            </t>
+        </template>
+
 </odoo>

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="get_sales_invoice_form" model="ir.ui.view">
+        <field name="name">get_sales_invoice_form</field>
+        <field name="model">sales_invoice_header</field>
+        <field name="arch" type="xml">
+            <form string="Get Sales Invoice">
+                <header>
+                    <button string="Find Invoice" type="object" name="search_sales_invoice" class="oe_highlight"/>                    
+                </header>
+                <sheet>
+                    <group>
+                        <field name="partner_id" widget="many2many_tags"/>
+                        <field name="salesperson" widget="many2many_tags"/>
+                    </group>
+                    <notebook colspan="4">
+                        <page string="Invoices">
+                            <field name="inkaso_invoice_ids">
+                                <tree string="Invoices" editable="bottom">
+                                    <field name="invoice_id"/>
+                                    <field name="partner_id"/>                                    
+                                    <field name="date_invoice"/>
+                                    <field name="number"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+                <footer>
+                    <button string="GET" type="object" name="get_sales_invoice" class="oe_highlight"/>                    
+                </footer>
+            </form>
+        </field>
+    </record>
+
+</odoo>

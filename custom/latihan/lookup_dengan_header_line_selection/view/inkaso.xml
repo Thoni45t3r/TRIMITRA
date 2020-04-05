@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>     
+        <record id="collection_list" model="ir.ui.view">
+            <field name="name">collection_list</field>
+            <field name="model">collection</field>
+            <field name="arch" type="xml">
+                <tree string="Collection List">
+                    <field name='name' attrs="{'readonly':[('state','!=','draft')]}"/>
+                    <field name='create_date' attrs="{'readonly':[('state','!=','draft')]}"/>
+                    <field name='state' attrs="{'readonly':[('state','!=','draft')]}"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="collection_form" model="ir.ui.view">
+            <field name="name">collection_form</field>
+            <field name="model">collection</field>
+            <field name="arch" type="xml">
+                <form string="Form collection">
+                    <header>
+                        <button string="Confirm" icon="" states="draft" type="object" name="action_confirm" class="oe_highlight"/>
+                        <button string="Done" icon="" states="open" type="object" name="action_done"/>
+                        <button string="Cancel" icon="" states="open,close" type="object" name="action_cancel"/>
+                        <field name="state" widget="statusbar"/>
+                    </header>
+                    <sheet>
+                        <group>
+                            <field name="name" attrs="{'readonly':[('state','!=','draft')]}"/>
+                            <field name="salesperson" attrs="{'readonly':[('state','!=','draft')]}"/>
+                            <field name='create_date' attrs="{'readonly':1}"/> <!-- create_date ini field bawaan system odoo dibagian model -->
+                        </group>
+                        <notebook colspan="4">
+                            <page string="Invoices">
+                                <field name="collection_invoice_ids">
+                                    <tree string="Invoices" editable="bottom">
+                                        <field name="partner_id"/>
+                                        <field name="invoice_id"/>
+                                        <field name="invoice_amount"/>
+                                        <field name="invoice_residual"/>
+                                        <field name="date_due"/>
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
+                    </sheet>
+                    
+                </form>
+            </field>
+        </record>
+
+        <record id="action_cancel_po" model="ir.actions.act_window">
+            <field name="name">Get Open Customer Invoices</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">sales_invoice_header</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="lookup_dengan_header_line_selection.get_sales_invoice_form"/>
+            <field name="target">new</field>
+            <field name="binding_model_id" ref="model_collection" />
+        </record>
+
+</odoo>

@@ -1,0 +1,21 @@
+{
+    'name': "Lookup Latihan 01",
+    'version': '12.0.0.0.1',
+    'summary': """Lookup Header Line Page""",
+    'description': """Lookup form yang berbentuk Header-Line dan bisa di select2x line nya dan masuk ke line form pemanggil""",
+    'category': 'Accounting',
+    'author': 'Ahmad Heriyanto',
+    'company': 'Nikisae',
+    'maintainer': 'Ahmad Heriyanto',
+    'website': "https://id.linkedin.com/in/ahmadheriyanto ",
+    'depends': ['base', 'account', 'sale', 'stock'],
+    'data': [
+        'view/sales_invoice.xml',
+        'view/inkaso.xml',
+        'view/menu.xml',
+    ],
+    'images': [],
+    'license': "AGPL-3",
+    'installable': True,
+    'application': False,
+}
