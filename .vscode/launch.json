@@ -7,12 +7,8 @@
             "request": "launch",
             "stopOnEntry": false,
             "pythonPath": "/usr/bin/python3",
-            "program": "/home/ahmad/odoo-dev/12/odoo/odoo-bin",
-            "args": [
-                "--config",
-                "/home/ahmad/odoo-dev/config/addon12.conf",
-            ],
-            "cwd": "/home/ahmad/odoo-dev/custom/12",
+            "program": "/mnt/d/odoo-dev/12/odoo/odoo-bin",
+            "cwd": "/mnt/d/odoo-dev/custom/12",
             "console": "integratedTerminal",
             "debugOptions": [
                 "WaitOnAbnormalExit",
