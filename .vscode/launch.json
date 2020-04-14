@@ -10,11 +10,6 @@
             "program": "/mnt/d/odoo-dev/12/odoo/odoo-bin",
             "cwd": "/mnt/d/odoo-dev/custom/12",
             "console": "integratedTerminal",
-            "debugOptions": [
-                "WaitOnAbnormalExit",
-                "WaitOnNormalExit",
-                "RedirectOutput"
-            ]
         }
     ]
 }
