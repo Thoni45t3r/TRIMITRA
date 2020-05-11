@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="product_price_history_tree" model="ir.ui.view">
+        <field name="name">product.price.history.tree</field>
+        <field name="model">product.price.history</field>
+        <field name="arch" type="xml">
+            <tree string="Product prices history" editable="top">
+                <field name="product_id"/>
+                <field name="cost"/>
+                <field name="datetime"/>
+            </tree>
+        </field>
+    </record>
+
+
+    <record id="product_price_history_action" model="ir.actions.act_window">
+        <field name="name">Historique des prix</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">product.price.history</field>
+        <field name="view_mode">tree,graph,pivot</field>
+        <field name="view_id" ref="product_price_history_tree"/>
+    </record>
+
+    <record id="product_price_history_serach_view" model="ir.ui.view">   
+        <field name="name">product.price.history.search</field>   
+        <field name="model">product.price.history</field>   
+        <field name="arch" type="xml">       
+            <search string="By product">           
+                <filter name="product_id" string="Product" context="{'group_by':'product_id'}"/>       
+                <filter name="company_id" string="Company" context="{'group_by':'company_id'}"/> 
+                <filter name="price_date" string="Month" domain="[ ]" context="{'group_by': 'datetime:month'}" />
+            </search>   
+        </field>
+    </record>
+
+    <menuitem action="product_price_history_action" id="product_price_history_action_id"
+            parent="purchase.menu_procurement_management"
+            sequence="8"
+            groups="purchase.group_purchase_manager"/>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</odoo>
