@@ -5,7 +5,7 @@
         <field name="name">product.price.history.tree</field>
         <field name="model">product.price.history</field>
         <field name="arch" type="xml">
-            <tree string="Product prices history" editable="top">
+            <tree string="Product prices history" create="false" edit="false">
                 <field name="product_id"/>
                 <field name="cost"/>
                 <field name="datetime"/>
@@ -15,7 +15,7 @@
 
 
     <record id="product_price_history_action" model="ir.actions.act_window">
-        <field name="name">Historique des prix</field>
+        <field name="name">Product Price History</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">product.price.history</field>
         <field name="view_mode">tree,graph,pivot</field>
