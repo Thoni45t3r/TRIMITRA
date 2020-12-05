@@ -6,7 +6,7 @@
             "type": "python",
             "request": "launch",
             "stopOnEntry": false,
-            "pythonPath": "/usr/bin/python3",
+            "python": "/usr/bin/python3",
             "program": "/mnt/d/odoo-dev/12/odoo/odoo-bin",
             "args": ["--config","/home/odoo/.odoorc_save_12"],
             "cwd": "/mnt/d/odoo-dev/custom/12",
