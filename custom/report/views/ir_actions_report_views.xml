@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+		<record id="ir_action_report_xml_form" model="ir.ui.view">
+            <field name="name">ir.action.report.xml.form</field>
+            <field name="model">ir.actions.report</field>
+            <field name="inherit_id" ref="base.act_report_xml_view" />
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='report_type']" position="replace">
+                     <field name="report_type"/>
+                </xpath>
+				<xpath expr="//field[@name='report_name']" position="after">
+                     <field name="report_rml" attrs="{'invisible':[('report_type','!=', 'controller')]}"/>
+                </xpath>
+				<notebook>
+                    <page name='rml' string="RML Configuration" attrs="{'invisible':[('report_type','not in',['pdf','sxw'])]}">
+                        <group>
+                            <group string="RML Report">
+                                <field name="header"/>
+                                <field name="report_file"/>
+                                <field name="auto"/>
+                                <field name="parser"/>
+                                <field name="usage"/>
+                            </group>
+                            <group string="XML Report">
+                                <field name="report_xsl"/>
+                                <field name="report_xml"/>
+                            </group>
+                        </group>
+                    </page>
+                </notebook>
+            </field>
+        </record>
+	</data>   
+</odoo>

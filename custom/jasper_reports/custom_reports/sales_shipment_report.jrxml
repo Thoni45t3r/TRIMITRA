@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Sales Shipment" pageWidth="595" pageHeight="420" columnWidth="550" leftMargin="20" rightMargin="25" topMargin="25" bottomMargin="20" uuid="604c968e-e2d7-4c00-b4a3-c5117e168d26">
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="161"/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="832"/>
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageHeight" value="inch"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="SJIM Lokal"/>
+	<property name="com.jaspersoft.studio.unit.pageWidth" value="inch"/>
+	<property name="com.jaspersoft.studio.unit.topMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.bottomMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.leftMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
+	<property name="com.jaspersoft.studio.property.dataset.dialog.DatasetDialog.sash.w1" value="600"/>
+	<property name="com.jaspersoft.studio.property.dataset.dialog.DatasetDialog.sash.w2" value="386"/>
+	<property name="ireport.zoom" value="1.86276396917748"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="id" class="java.lang.Integer"/>
+	<queryString language="SQL">
+		<![CDATA[SELECT
+	sp.name AS sj_no,
+	sp.date AS tgl_sj,
+	rp.display_name AS nama_toko,
+	rp.name AS pemilik,
+	rp.street AS alamat,
+	rp.mobile AS no_telp,
+	pp.default_code AS product_code,
+	pt.name AS product_name,
+	um.name AS uom,
+	sm.product_qty AS qty
+from stock_picking sp
+	LEFT JOIN stock_move sm ON sm.picking_id=sp.id
+	LEFT JOIN product_product pp ON pp.id=sm.product_id
+	LEFT JOIN product_template pt ON pt.id=pp.product_tmpl_id
+	LEFT JOIN uom_uom um ON um.id=sm.product_uom
+	LEFT JOIN res_partner rp ON rp.id=sp.partner_id
+WHERE sp."id" = $P{id}]]>
+	</queryString>
+</jasperReport>
