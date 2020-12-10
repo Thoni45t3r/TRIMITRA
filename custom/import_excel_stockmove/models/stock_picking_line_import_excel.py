@@ -20,6 +20,7 @@ class ImportReceiptLine(models.TransientModel):
         default=lambda self: self.env['stock.picking.type'].browse(self._context.get('default_picking_type_id')).default_location_dest_id, required=True)
     picking_type_id = fields.Many2one('stock.picking.type', 'Operation Type',required=True)
     upload_file = fields.Binary(string="Lookup Excel File")
+    fill_qty_done = fields.Boolean(string="Fill Quantity Done during import")
 
     @api.onchange('picking_type_id', 'partner_id')
     def onchange_picking_type(self):
@@ -157,12 +158,17 @@ class ImportReceiptLine(models.TransientModel):
                 else:
                     check_lot = check_lot[0]
 
+                qty_done = 0
+                if self.fill_qty_done:
+                    qty_done = row['QTY Kirim']
+
                 stock_move.move_line_ids.create({
                         'picking_id': stock_picking.id,
                         'move_id': stock_move.id,
                         'product_id': check_product.id,
                         'product_uom_id': check_uom.id,
                         'product_uom_qty': row['QTY Kirim'],
+                        'qty_done': qty_done,
                         'lot_id': check_lot.id,
                         'lot_name': row['Batch number'],
                         'location_id': stock_picking.location_id.id,

@@ -19,6 +19,10 @@
 
                     <div><label for="picking_type_id" string="Operation Type"/></div>
                     <div><field name="picking_type_id"/></div>
+
+                    <div><label for="fill_qty_done" string="Fill qty done"/></div>
+                    <div><field name="fill_qty_done"/></div>
+                    
                     
                     <div><label for="upload_file" string="Click 'Upload your file' button, after that click Upload Button : "/></div>
                     <div><field name="upload_file"/></div>
