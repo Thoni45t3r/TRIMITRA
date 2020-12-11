@@ -1,15 +1,15 @@
 <?xml version="1.0"?>
 <odoo>
 
-    <record id="import_stockmove_form" model="ir.ui.view">
-        <field name="name">import_stockmove_form</field>
+    <record id="import_format_outbound_customer_form" model="ir.ui.view">
+        <field name="name">import_format_outbound_customer_form</field>
         <field name="model">stock.picking.import.receipt</field>
         <field name="type">form</field>
         <field name="arch" type="xml">
             <form>
                 <group>
-                    <div><label for="partner_id" string="Partner"/></div>
-                    <div><field name="partner_id"/></div>
+                    <div><label for="picking_type_id" string="Operation Type"/></div>
+                    <div><field name="picking_type_id"/></div>
 
                     <div><label for="location_id" string="Source Location"/></div>
                     <div><field name="location_id"/></div>
@@ -17,30 +17,23 @@
                     <div><label for="location_dest_id" string="Destination"/></div>
                     <div><field name="location_dest_id"/></div>
 
-                    <div><label for="picking_type_id" string="Operation Type"/></div>
-                    <div><field name="picking_type_id"/></div>
-
-                    <div><label for="fill_qty_done" string="Fill qty done"/></div>
-                    <div><field name="fill_qty_done"/></div>
-                    
-                    
                     <div><label for="upload_file" string="Click 'Upload your file' button, after that click Upload Button : "/></div>
                     <div><field name="upload_file"/></div>
                 </group>
                 <footer>
-                    <button string="Upload" name="import_xls_action_layout_01" default_focus="1" type="object" class="btn-primary"/>
+                    <button string="Upload" name="import_format_outbound_customer" default_focus="1" type="object" class="btn-primary"/>
                     <button string="Cancel" class="btn-default" special="cancel" />
                 </footer>
             </form>
         </field>
     </record>
-    <record id="action_import_stockmove" model="ir.actions.act_window">
-        <field name="name">Import Excel Layout 01</field>
+    <record id="action_format_outbound_customer" model="ir.actions.act_window">
+        <field name="name">Format Outbound Customer</field>
         <field name="res_model">stock.picking.import.receipt</field>
         <field name="type">ir.actions.act_window</field>
         <field name="view_type">form</field>
         <field name="view_mode">form</field>
-        <field name="view_id" ref="import_stockmove_form"/>
+        <field name="view_id" ref="import_format_outbound_customer_form"/>
         <field name="target">new</field>
         <field name="binding_model_id" ref="stock.model_stock_picking"/>
     </record>

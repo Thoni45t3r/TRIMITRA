@@ -16,7 +16,9 @@ User mendapat file excel dari partner, file tersebut berisi data sku yang perlu 
                 ],
     'demo': [],
     'data': [
-        'views/import_stock_move_from_excel.xml',
+        'views/import_format_inbound_customer.xml',
+        'views/import_Format_Inbound_WH.xml',
+        'views/import_format_outbound_customer.xml',
     ],
     'installable': True,
     'application': True,
