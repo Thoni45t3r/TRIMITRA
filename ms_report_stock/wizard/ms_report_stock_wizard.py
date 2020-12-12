@@ -55,12 +55,17 @@ class MsReportStock(models.TransientModel):
             ('Product', 30, 'char', 'char'),
             ('Product Category', 20, 'char', 'char'),
             ('Location', 30, 'char', 'char'),
+            ('Product Volume', 20, 'float', 'float'),
+            ('Product Weight', 20, 'float', 'float'),
             ('Batch', 30, 'char', 'char'),
+            ('Expired date', 20, 'datetime', 'char'),
             ('Incoming Date', 20, 'datetime', 'char'),
             ('Stock Age', 20, 'number', 'char'),
             ('Total Stock', 20, 'float', 'float'),
             ('Available', 20, 'float', 'float'),
             ('Reserved', 20, 'float', 'float'),
+            ('Volume Total', 20, 'float', 'float'),
+            ('Weight Total', 20, 'float', 'float'),
         ]
 
         datetime_format = '%Y-%m-%d %H:%M:%S'
@@ -76,37 +81,46 @@ class MsReportStock(models.TransientModel):
             hours = str(hours) + ' hour'
         
         query = """
-            SELECT 
-                prod_tmpl.name as product, 
-                categ.name as prod_categ, 
-                loc.complete_name as location,
-                lot.name as lotserial,
-                quant.in_date + interval '%s' as date_in, 
-                date_part('days', now() - (quant.in_date + interval '%s')) as aging,
-                sum(quant.quantity) as total_product, 
-                sum(quant.quantity-quant.reserved_quantity) as stock, 
-                sum(quant.reserved_quantity) as reserved
-            FROM 
-                stock_quant quant
-            LEFT JOIN 
-                stock_location loc on loc.id=quant.location_id
-            LEFT JOIN 
-                product_product prod on prod.id=quant.product_id
-            LEFT JOIN 
-                product_template prod_tmpl on prod_tmpl.id=prod.product_tmpl_id
-            LEFT JOIN 
-                product_category categ on categ.id=prod_tmpl.categ_id
-            LEFt JOIN
-                stock_production_lot lot on lot.id = quant.lot_id
-            WHERE 
-                %s and %s
-            GROUP BY 
-                product, prod_categ, location, date_in, lotserial
-            ORDER BY 
-                date_in
+            SELECT TBL1.product, TBL1.prod_categ, TBL1.location, prod2.volume, prod2.weight, TBL1.lotserial, LOT2.use_date + interval '%s' as expired_date, TBL1.date_in, TBL1.aging, TBL1.total_product, TBL1.stock, TBL1.reserved, TBL1.volume, TBL1.weight FROM (
+                SELECT
+                    quant.product_id as prodid, 
+                    prod_tmpl.name as product, 
+                    categ.name as prod_categ, 
+                    loc.complete_name as location,
+                    lot.name as lotserial,
+                    lot.id as lotid,
+                    quant.in_date + interval '%s' as date_in, 
+                    date_part('days', now() - (quant.in_date + interval '%s')) as aging,
+                    sum(quant.quantity) as total_product, 
+                    sum(quant.quantity-quant.reserved_quantity) as stock, 
+                    sum(quant.reserved_quantity) as reserved,
+                    sum(quant.quantity * prod.volume) as volume, 
+                    sum(quant.quantity * prod.weight) as weight 
+                FROM 
+                    stock_quant quant
+                LEFT JOIN 
+                    stock_location loc on loc.id=quant.location_id
+                LEFT JOIN 
+                    product_product prod on prod.id=quant.product_id
+                LEFT JOIN 
+                    product_template prod_tmpl on prod_tmpl.id=prod.product_tmpl_id
+                LEFT JOIN 
+                    product_category categ on categ.id=prod_tmpl.categ_id
+                LEFt JOIN
+                    stock_production_lot lot on lot.id = quant.lot_id
+                WHERE 
+                    %s and %s
+                GROUP BY 
+                    prodid, product, prod_categ, location, date_in, lotserial, lotid
+                ORDER BY 
+                    date_in ) TBL1 
+            LEFT JOIN
+                stock_production_lot LOT2 on LOT2.id = TBL1.lotid
+            LEFT JOIN
+                product_product prod2 on prod2.id = TBL1.prodid
         """
         
-        self._cr.execute(query%(hours,hours,where_product_ids,where_location_ids))
+        self._cr.execute(query%(hours,hours,hours,where_product_ids,where_location_ids))
         result = self._cr.fetchall()
         
         fp = BytesIO()
