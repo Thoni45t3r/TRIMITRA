@@ -326,7 +326,14 @@ class ImportReceiptLine(models.TransientModel):
         if import_data:
             for row in import_data:
                 #Check master product
-                product_no = '' + row['Item number']  #str(int(row['Item number']))
+                product_no = row['Item number']
+                if isinstance(product_no,int) or isinstance(product_no,float):
+                    fractional, whole = math.modf(product_no)
+                    if fractional == 0:
+                        product_no = str(int(product_no))
+                    else:
+                        product_no = str(product_no)
+                
                 check_product = self.env['product.product'].search([('default_code','=',product_no)])
                 if not check_product:
                     raise UserError(_('Product %s does not exist in master data' % product_no))
@@ -395,7 +402,14 @@ class ImportReceiptLine(models.TransientModel):
 
                 #Check Stock.production.lot
                 #raise UserError(_('test: ijno = %s, Best before date = %s ' % (ijno,datetime(*xlrd.xldate_as_tuple(row['Best before date'], 0)))))
-                batchno = '' + row['Batch number']
+                batchno = row['Batch number']
+                if isinstance(batchno,int) or isinstance(batchno,float):
+                    fractional, whole = math.modf(batchno)
+                    if fractional == 0:
+                        batchno = str(int(batchno))
+                    else:
+                        batchno = str(batchno)
+                
                 check_lot = self.env['stock.production.lot'].search([('name','=',batchno),('product_id','=',check_product.id)])
                 if not check_lot:
                     raise UserError(_('Batch# %s on Product %s does not exist in master data' % (batchno,product_no)))
