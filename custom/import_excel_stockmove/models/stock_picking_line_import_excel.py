@@ -5,6 +5,7 @@ import os, os.path
 from datetime import datetime
 import base64
 import xlrd
+import math
 
 
 class ImportReceiptLine(models.TransientModel):
@@ -325,9 +326,10 @@ class ImportReceiptLine(models.TransientModel):
         if import_data:
             for row in import_data:
                 #Check master product
-                check_product = self.env['product.product'].search([('default_code','=',str(int(row['Item number'])))])
+                product_no = '' + row['Item number']  #str(int(row['Item number']))
+                check_product = self.env['product.product'].search([('default_code','=',product_no)])
                 if not check_product:
-                    raise UserError(_('Product %s does not exist in master data' % str(int(row['Item number']))))
+                    raise UserError(_('Product %s does not exist in master data' % product_no))
                 else:
                     check_product = check_product[0]
                 
@@ -393,9 +395,10 @@ class ImportReceiptLine(models.TransientModel):
 
                 #Check Stock.production.lot
                 #raise UserError(_('test: ijno = %s, Best before date = %s ' % (ijno,datetime(*xlrd.xldate_as_tuple(row['Best before date'], 0)))))
-                check_lot = self.env['stock.production.lot'].search([('name','=',row['Batch number']),('product_id','=',check_product.id)])
+                batchno = '' + row['Batch number']
+                check_lot = self.env['stock.production.lot'].search([('name','=',batchno),('product_id','=',check_product.id)])
                 if not check_lot:
-                    raise UserError(_('Batch# %s on Product %s does not exist in master data' % (row['Batch number'],str(int(row['Item number'])))))
+                    raise UserError(_('Batch# %s on Product %s does not exist in master data' % (batchno,product_no)))
                 else:
                     check_lot = check_lot[0]
 
@@ -411,7 +414,153 @@ class ImportReceiptLine(models.TransientModel):
                 #        'product_uom_qty': row['Pick quantity'],
                 #        'qty_done': qty_done,
                         'lot_id': check_lot.id,
-                        'lot_name': row['Batch number'],
+                        'lot_name': batchno,
+                        'location_id': check_loc.id, # apply source location
+                        'location_dest_id': stock_picking.location_dest_id.id
+                        })
+
+
+                    
+    @api.one
+    def import_format_outbound_wh(self):
+        if not self.upload_file:
+            raise UserError(_('Lookup xls excel file before upload'))
+        mpath = get_module_path('import_excel_stockmove')
+        out_file_name = 'inbound.xls'
+        out_file = mpath + _('/tmp/' + out_file_name)
+        #delete file if exist
+        if os.path.exists(out_file):
+            os.remove(out_file)
+        data = base64.b64decode(self.upload_file)
+        with open(out_file,'wb') as file:
+            file.write(data) 
+        xl_workbook = xlrd.open_workbook(file.name)
+        sheet_names = xl_workbook.sheet_names()
+        sheetname = 'Format Outbound WH'
+        if not (sheetname in sheet_names):
+            raise UserError(_('Worksheet with name "%s" is not exist' % sheetname))
+        xl_sheet = xl_workbook.sheet_by_name(sheetname)
+        #Number of Columns
+        num_cols = xl_sheet.ncols
+        #header
+        headers = []
+        for col_idx in range(0, num_cols):
+            cell_obj = xl_sheet.cell(0, col_idx)
+            headers.append(cell_obj.value)
+        import_data = []
+        for row_idx in range(1, xl_sheet.nrows):
+            row_dict = {}
+            for col_idx in range(0, num_cols):
+                cell_obj = xl_sheet.cell(row_idx,col_idx)
+                row_dict[headers[col_idx]] = cell_obj.value
+            import_data.append(row_dict)
+        
+        if import_data:
+            for row in import_data:
+                #Check master product
+                product_no = row['PRODUCT CODE']
+                if isinstance(product_no,int) or isinstance(product_no,float):
+                    fractional, whole = math.modf(product_no)
+                    if fractional == 0:
+                        product_no = str(int(product_no))
+                    else:
+                        product_no = str(product_no)
+
+                check_product = self.env['product.product'].search([('default_code','=',product_no)])
+                if not check_product:
+                    raise UserError(_('Product %s does not exist in master data' % product_no))
+                else:
+                    check_product = check_product[0]
+                
+                ##Check master UoM
+                check_uom = self.env['uom.uom'].search([('name','=',row['UOM'])])
+                if not check_uom:
+                    raise UserError(_('UoM %s does not exist in master data' % row['UOM']))
+                else:
+                    check_uom = check_uom[0]
+                
+                #Check Customer
+                custno = '' + row['CUSTOMER']
+                check_cust = self.env['res.partner'].search([('ref','=',custno)])
+                if not check_cust:
+                    raise UserError(_('Customer Internal Reference %s does not exist in master data' % custno))
+                else:
+                    check_cust = check_cust[0]
+
+                #                   0        1           2                  3               4                  5                 6           7              8                9                       10
+                #rowdata = [check_uom.id,row['UOM'],check_product.id,row['Item number'],row['BU'],row['Pick quantity'],row['Batch number'],row['PLS'],row['Customer'],check_cust.id,row['Customer Internal Reference']
+                ijno = row['PICKING NUMBER']
+                stock_picking = self.env['stock.picking'].search([('origin','=',ijno)])
+                if not stock_picking:
+                    stock_picking = stock_picking.create({
+                        'partner_id': check_cust.id,
+                        'picking_type_id': self.picking_type_id.id,
+                        'location_id': self.location_id.id,
+                        'location_dest_id': self.location_dest_id.id,
+                        'origin': ijno
+                    })
+                else:
+                    stock_picking = stock_picking[0]
+                    if stock_picking.state in ['done','cancel']:
+                        raise UserError(_('Stock Picking with Source Document %s already exist in the system with status %s, Source Document must be on other new value' % (ijno,stock_picking.state)))
+
+                #Check Source Location Pick
+                check_loc = self.env['stock.location'].search([('complete_name','=ilike',_('%s%s' % ('%',row['LOCATION'])))]) #complete_name
+                if not check_loc:
+                    raise UserError(_('Location %s does not exist in master data' % row['LOCATION']))
+                else:
+                    check_loc = check_loc[0]
+
+                #raise UserError(_('LOCATION = %s, Check Location %s with id %s' % (row['LOCATION'],check_loc.name,check_loc.id)))
+
+                #mulai input data
+                stock_move = stock_picking.move_lines.create({
+                                    'name':check_product.name,
+                                    'sequence':10,
+                                    'company_id':stock_picking.company_id.id,
+                                    'product_id': check_product.id,
+                                    'product_uom': check_uom.id,
+                                    #'product_qty': row['QTY Kirim'],
+                                    'product_uom_qty': row['QTY'],
+                                    #'reserved_avaibility': 0,
+                                    'location_id': check_loc.id, # apply source location
+                                    'location_dest_id': stock_picking.location_dest_id.id,
+                                    'picking_type_id':stock_picking.picking_type_id.id,
+                                    'picking_id':stock_picking.id
+                                    })
+
+                
+                # LOT Jangan dimasukkan 
+
+                #Check Stock.production.lot
+                #raise UserError(_('test: ijno = %s, Best before date = %s ' % (ijno,datetime(*xlrd.xldate_as_tuple(row['Best before date'], 0)))))
+                batchno = row['Batch Number']
+                if isinstance(batchno,int) or isinstance(batchno,float):
+                    fractional, whole = math.modf(batchno)
+                    if fractional == 0:
+                        batchno = str(int(batchno))
+                    else:
+                        batchno = str(batchno)
+                        
+                check_lot = self.env['stock.production.lot'].search([('name','=',batchno),('product_id','=',check_product.id)])
+                if not check_lot:
+                    raise UserError(_('Batch# %s on Product %s does not exist in master data' % (batchno,product_no)))
+                else:
+                    check_lot = check_lot[0]
+
+                #qty_done = 0
+                #if self.fill_qty_done:
+                #    qty_done = row['Pick quantity']
+                
+                stock_move.move_line_ids.create({
+                        'picking_id': stock_picking.id,
+                        'move_id': stock_move.id,
+                        'product_id': check_product.id,
+                        'product_uom_id': check_uom.id,
+                #        'product_uom_qty': row['Pick quantity'],
+                #        'qty_done': qty_done,
+                        'lot_id': check_lot.id,
+                        'lot_name': batchno,
                         'location_id': check_loc.id, # apply source location
                         'location_dest_id': stock_picking.location_dest_id.id
                         })
