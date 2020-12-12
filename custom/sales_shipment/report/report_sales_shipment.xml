@@ -94,7 +94,7 @@
 								</tbody>
 							</table>
 							<p/>
-							<div style="width: 100%; text-align: right; font-size:24px;">Bandar Lampung,_______________________________________</div>
+							<div style="width: 100%; text-align: right; font-size:24px;">Bandar Lampung, <span t-esc="context_timestamp(datetime.datetime.now()).strftime('%d %B %Y')"/></div>
 							<p/>
 							<table style="width: 100%; font-size:22px;">
 								<tr style="width: 100%;">
