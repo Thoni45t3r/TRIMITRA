@@ -340,7 +340,7 @@ class ImportReceiptLine(models.TransientModel):
                 else:
                     check_product = check_product[0]
                 
-                ##Check master UoM
+                #Check master UoM
                 check_uom = self.env['uom.uom'].search([('name','=',row['UOM'])])
                 if not check_uom:
                     raise UserError(_('UoM %s does not exist in master data' % row['UOM']))
@@ -372,12 +372,13 @@ class ImportReceiptLine(models.TransientModel):
                     if stock_picking.state in ['done','cancel']:
                         raise UserError(_('Stock Picking with Source Document %s already exist in the system with status %s, Source Document must be on other new value' % (ijno,stock_picking.state)))
 
-                #Check Source Location Pick
-                check_loc = self.env['stock.location'].search([('complete_name','=ilike',_('%s%s' % ('%',row['BU'])))]) #complete_name
-                if not check_loc:
-                    raise UserError(_('Location %s does not exist in master data' % row['BU']))
-                else:
-                    check_loc = check_loc[0]
+                #LAGI: lokasi tidak perlu, karena systemnya akan otomatis cari
+                ##Check Source Location Pick
+                #check_loc = self.env['stock.location'].search([('complete_name','=ilike',_('%s%s' % ('%',row['BU'])))]) #complete_name
+                #if not check_loc:
+                #    raise UserError(_('Location %s does not exist in master data' % row['BU']))
+                #else:
+                #    check_loc = check_loc[0]
 
                 #raise UserError(_('BU = %s, Check Location %s with id %s' % (row['BU'],check_loc.name,check_loc.id)))
 
@@ -391,14 +392,14 @@ class ImportReceiptLine(models.TransientModel):
                                     #'product_qty': row['QTY Kirim'],
                                     'product_uom_qty': row['Pick quantity'],
                                     #'reserved_avaibility': 0,
-                                    'location_id': check_loc.id, # apply source location
+                                    'location_id': stock_picking.location_id.id,
                                     'location_dest_id': stock_picking.location_dest_id.id,
                                     'picking_type_id':stock_picking.picking_type_id.id,
                                     'picking_id':stock_picking.id
                                     })
 
                 
-                # LOT Jangan dimasukkan 
+                # Check LOT
 
                 #Check Stock.production.lot
                 #raise UserError(_('test: ijno = %s, Best before date = %s ' % (ijno,datetime(*xlrd.xldate_as_tuple(row['Best before date'], 0)))))
@@ -429,7 +430,7 @@ class ImportReceiptLine(models.TransientModel):
                 #        'qty_done': qty_done,
                         'lot_id': check_lot.id,
                         'lot_name': batchno,
-                        'location_id': check_loc.id, # apply source location
+                        'location_id': stock_picking.location_id.id,
                         'location_dest_id': stock_picking.location_dest_id.id
                         })
 
@@ -486,7 +487,7 @@ class ImportReceiptLine(models.TransientModel):
                 else:
                     check_product = check_product[0]
                 
-                ##Check master UoM
+                #Check master UoM
                 check_uom = self.env['uom.uom'].search([('name','=',row['UOM'])])
                 if not check_uom:
                     raise UserError(_('UoM %s does not exist in master data' % row['UOM']))
@@ -518,12 +519,13 @@ class ImportReceiptLine(models.TransientModel):
                     if stock_picking.state in ['done','cancel']:
                         raise UserError(_('Stock Picking with Source Document %s already exist in the system with status %s, Source Document must be on other new value' % (ijno,stock_picking.state)))
 
-                #Check Source Location Pick
-                check_loc = self.env['stock.location'].search([('complete_name','=ilike',_('%s%s' % ('%',row['LOCATION'])))]) #complete_name
-                if not check_loc:
-                    raise UserError(_('Location %s does not exist in master data' % row['LOCATION']))
-                else:
-                    check_loc = check_loc[0]
+                #LAGI: lokasi tidak perlu, karena systemnya akan otomatis cari
+                ##Check Source Location Pick
+                #check_loc = self.env['stock.location'].search([('complete_name','=ilike',_('%s%s' % ('%',row['LOCATION'])))]) #complete_name
+                #if not check_loc:
+                #    raise UserError(_('Location %s does not exist in master data' % row['LOCATION']))
+                #else:
+                #    check_loc = check_loc[0]
 
                 #raise UserError(_('LOCATION = %s, Check Location %s with id %s' % (row['LOCATION'],check_loc.name,check_loc.id)))
 
@@ -537,14 +539,14 @@ class ImportReceiptLine(models.TransientModel):
                                     #'product_qty': row['QTY Kirim'],
                                     'product_uom_qty': row['QTY'],
                                     #'reserved_avaibility': 0,
-                                    'location_id': check_loc.id, # apply source location
+                                    'location_id': stock_picking.location_id.id,
                                     'location_dest_id': stock_picking.location_dest_id.id,
                                     'picking_type_id':stock_picking.picking_type_id.id,
                                     'picking_id':stock_picking.id
                                     })
 
                 
-                # LOT Jangan dimasukkan 
+                # Check LOT
 
                 #Check Stock.production.lot
                 #raise UserError(_('test: ijno = %s, Best before date = %s ' % (ijno,datetime(*xlrd.xldate_as_tuple(row['Best before date'], 0)))))
@@ -575,6 +577,6 @@ class ImportReceiptLine(models.TransientModel):
                 #        'qty_done': qty_done,
                         'lot_id': check_lot.id,
                         'lot_name': batchno,
-                        'location_id': check_loc.id, # apply source location
+                        'location_id': stock_picking.location_id.id,
                         'location_dest_id': stock_picking.location_dest_id.id
                         })
