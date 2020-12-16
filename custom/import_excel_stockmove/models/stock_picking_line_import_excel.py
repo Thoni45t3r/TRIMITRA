@@ -84,7 +84,7 @@ class ImportReceiptLine(models.TransientModel):
         sheet_names = xl_workbook.sheet_names()
         sheetname = 'Sheet1'
         if not (sheetname in sheet_names):
-            raise UserError(_('Worksheet with name "%s" is not exist' % sheetname))
+            raise UserError(_('Worksheet with name "%s" does not exist' % sheetname))
         xl_sheet = xl_workbook.sheet_by_name(sheetname)
         #Number of Columns
         num_cols = xl_sheet.ncols
@@ -194,7 +194,7 @@ class ImportReceiptLine(models.TransientModel):
         sheet_names = xl_workbook.sheet_names()
         sheetname = 'Sheet1'
         if not (sheetname in sheet_names):
-            raise UserError(_('Worksheet with name "%s" is not exist' % sheetname))
+            raise UserError(_('Worksheet with name "%s" does not exist' % sheetname))
         xl_sheet = xl_workbook.sheet_by_name(sheetname)
         #Number of Columns
         num_cols = xl_sheet.ncols
@@ -306,7 +306,7 @@ class ImportReceiptLine(models.TransientModel):
         sheet_names = xl_workbook.sheet_names()
         sheetname = 'Sheet1'
         if not (sheetname in sheet_names):
-            raise UserError(_('Worksheet with name "%s" is not exist' % sheetname))
+            raise UserError(_('Worksheet with name "%s" does not exist' % sheetname))
         xl_sheet = xl_workbook.sheet_by_name(sheetname)
         #Number of Columns
         num_cols = xl_sheet.ncols
@@ -453,7 +453,7 @@ class ImportReceiptLine(models.TransientModel):
         sheet_names = xl_workbook.sheet_names()
         sheetname = 'Sheet1'
         if not (sheetname in sheet_names):
-            raise UserError(_('Worksheet with name "%s" is not exist' % sheetname))
+            raise UserError(_('Worksheet with name "%s" does not exist' % sheetname))
         xl_sheet = xl_workbook.sheet_by_name(sheetname)
         #Number of Columns
         num_cols = xl_sheet.ncols
