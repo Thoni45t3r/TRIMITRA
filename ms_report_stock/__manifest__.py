@@ -16,6 +16,7 @@
     ],
     "data"          : [
         "wizard/ms_report_stock_wizard.xml",
+        "wizard/test.xml",
     ],
     "demo"          : [],
     "test"          : [],

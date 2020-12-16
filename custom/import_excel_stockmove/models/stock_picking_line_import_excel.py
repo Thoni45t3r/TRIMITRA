@@ -82,7 +82,7 @@ class ImportReceiptLine(models.TransientModel):
             file.write(data) 
         xl_workbook = xlrd.open_workbook(file.name)
         sheet_names = xl_workbook.sheet_names()
-        sheetname = 'Format Inbound Customer'
+        sheetname = 'Sheet1'
         if not (sheetname in sheet_names):
             raise UserError(_('Worksheet with name "%s" is not exist' % sheetname))
         xl_sheet = xl_workbook.sheet_by_name(sheetname)
@@ -192,7 +192,7 @@ class ImportReceiptLine(models.TransientModel):
             file.write(data) 
         xl_workbook = xlrd.open_workbook(file.name)
         sheet_names = xl_workbook.sheet_names()
-        sheetname = 'Format Inbound WH'
+        sheetname = 'Sheet1'
         if not (sheetname in sheet_names):
             raise UserError(_('Worksheet with name "%s" is not exist' % sheetname))
         xl_sheet = xl_workbook.sheet_by_name(sheetname)
@@ -304,7 +304,7 @@ class ImportReceiptLine(models.TransientModel):
             file.write(data) 
         xl_workbook = xlrd.open_workbook(file.name)
         sheet_names = xl_workbook.sheet_names()
-        sheetname = 'Format Outbound Customer'
+        sheetname = 'Sheet1'
         if not (sheetname in sheet_names):
             raise UserError(_('Worksheet with name "%s" is not exist' % sheetname))
         xl_sheet = xl_workbook.sheet_by_name(sheetname)
@@ -451,7 +451,7 @@ class ImportReceiptLine(models.TransientModel):
             file.write(data) 
         xl_workbook = xlrd.open_workbook(file.name)
         sheet_names = xl_workbook.sheet_names()
-        sheetname = 'Format Outbound WH'
+        sheetname = 'Sheet1'
         if not (sheetname in sheet_names):
             raise UserError(_('Worksheet with name "%s" is not exist' % sheetname))
         xl_sheet = xl_workbook.sheet_by_name(sheetname)

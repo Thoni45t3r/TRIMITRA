@@ -5,6 +5,7 @@ from io import BytesIO
 from datetime import datetime
 from pytz import timezone
 import pytz
+from odoo.exceptions import UserError
 
 class MsReportStock(models.TransientModel):
     _name = "ms.report.stock"
@@ -23,6 +24,37 @@ class MsReportStock(models.TransientModel):
     location_ids = fields.Many2many('stock.location', 'ms_report_stock_location_rel', 'ms_report_stock_id',
         'location_id', 'Locations')
         
+    
+
+    def print_test(self):
+        data = self.read()[0]
+        product_ids = data['product_ids']
+        categ_ids = data['categ_ids']
+        location_ids = data['location_ids']
+        
+        if categ_ids :
+            product_ids = self.env['product.product'].search([('categ_id','in',categ_ids)])
+            product_ids = [prod.id for prod in product_ids]
+        where_product_ids = " 1=1 "
+        where_product_ids2 = " 1=1 "
+        if product_ids :
+            where_product_ids = " quant.product_id in %s"%str(tuple(product_ids)).replace(',)', ')')
+            where_product_ids2 = " product_id in %s"%str(tuple(product_ids)).replace(',)', ')')
+        location_ids2 = self.env['stock.location'].search([('usage','=','internal')])
+        ids_location = [loc.id for loc in location_ids2]
+        where_location_ids = " quant.location_id in %s"%str(tuple(ids_location)).replace(',)', ')')
+        where_location_ids2 = " location_id in %s"%str(tuple(ids_location)).replace(',)', ')')
+        if location_ids :
+            where_location_ids = " quant.location_id in %s"%str(tuple(location_ids)).replace(',)', ')')
+            where_location_ids2 = " location_id in %s"%str(tuple(location_ids)).replace(',)', ')')
+        
+        datetime_string = self.get_default_date_model().strftime("%Y-%m-%d %H:%M:%S")
+        date_string = self.get_default_date_model().strftime("%Y-%m-%d")
+        report_name = 'Stock Report'
+        filename = '%s %s'%(report_name,date_string)
+
+        raise UserError(where_location_ids)
+
     def print_excel_report(self):
         data = self.read()[0]
         product_ids = data['product_ids']
