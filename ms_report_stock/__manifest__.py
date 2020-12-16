@@ -17,6 +17,7 @@
     "data"          : [
         "wizard/ms_report_stock_wizard.xml",
         "wizard/ms_report_inbound_wizard.xml",
+        "wizard/ms_report_outbound_wizard.xml",
         "wizard/test.xml",
     ],
     "demo"          : [],

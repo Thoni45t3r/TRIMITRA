@@ -8,8 +8,8 @@ import pytz
 from odoo.exceptions import UserError
 
 class MsReportStock(models.TransientModel):
-    _name = "ms.report.stock.inbound"
-    _description = "Stock Inbound Report.xlsx"
+    _name = "ms.report.stock.outbound"
+    _description = "Stock Outbound Report.xlsx"
     
     @api.model
     def get_default_date_model(self):
@@ -48,13 +48,14 @@ class MsReportStock(models.TransientModel):
         
         datetime_string = self.get_default_date_model().strftime("%Y-%m-%d %H:%M:%S")
         date_string = self.get_default_date_model().strftime("%Y-%m-%d")
-        report_name = 'Stock Inbound Report'
+        report_name = 'Stock Outbound Report'
         filename = '%s %s'%(report_name,date_string)
         
         columns = [
             ('No', 5, 'no', 'no'),
             ('Date', 20, 'datetime', 'char'),
-            ('PO Number', 30, 'char', 'char'),
+            ('DO Number', 30, 'char', 'char'),
+            ('Destination', 30, 'char', 'char'),
             ('Qty', 20, 'float', 'float'),
             ('Total Volume (CBM)', 30, 'float', 'float'),
             ('Total Weight (Kg)', 30, 'float', 'float')
@@ -75,6 +76,7 @@ class MsReportStock(models.TransientModel):
         query = """
             select sm.date::timestamp::date,
                    sp.origin,
+                   res.name,
                    sum(sm.product_uom_qty) as qty,
                    sum((prod.volume * sm.product_uom_qty)) as volume,
                    sum((prod.weight * sm.product_uom_qty)) as weight 
@@ -83,57 +85,21 @@ class MsReportStock(models.TransientModel):
             left join 
                 stock_picking sp on sm.picking_id = sp.id 
             left join 
-                product_product prod on prod.id=sm.product_id
+                res_partner res on res.id = sp.partner_id
+            left join 
+                product_product prod on prod.id=sm.product_id 
             left join
                 stock_picking_type spt on spt.id = sm.picking_type_id
-            where sm.state='done' and spt.code='incoming' and sm.company_id=%s group by sm.date::timestamp::date,sp.origin;
+            where sm.state='done' and spt.code='outgoing' and sm.company_id=%s group by sm.date::timestamp::date,sp.origin,res.name;
         """
 
-        # query = """
-        #     SELECT TBL1.product, TBL1.prod_categ, TBL1.location, prod2.volume, prod2.weight, TBL1.lotserial, LOT2.use_date + interval '%s' as expired_date, TBL1.date_in, TBL1.aging, TBL1.total_product, TBL1.stock, TBL1.reserved, TBL1.volume, TBL1.weight FROM (
-        #         SELECT
-        #             quant.product_id as prodid, 
-        #             prod_tmpl.name as product, 
-        #             categ.name as prod_categ, 
-        #             loc.complete_name as location,
-        #             lot.name as lotserial,
-        #             lot.id as lotid,
-        #             quant.in_date + interval '%s' as date_in, 
-        #             date_part('days', now() - (quant.in_date + interval '%s')) as aging,
-        #             sum(quant.quantity) as total_product, 
-        #             sum(quant.quantity-quant.reserved_quantity) as stock, 
-        #             sum(quant.reserved_quantity) as reserved,
-        #             sum(quant.quantity * prod.volume) as volume, 
-        #             sum(quant.quantity * prod.weight) as weight 
-        #         FROM 
-        #             stock_quant quant
-        #         LEFT JOIN 
-        #             stock_location loc on loc.id=quant.location_id
-        #         LEFT JOIN 
-        #             product_product prod on prod.id=quant.product_id
-        #         LEFT JOIN 
-        #             product_template prod_tmpl on prod_tmpl.id=prod.product_tmpl_id
-        #         LEFT JOIN 
-        #             product_category categ on categ.id=prod_tmpl.categ_id
-        #         LEFt JOIN
-        #             stock_production_lot lot on lot.id = quant.lot_id
-        #         WHERE 
-        #             %s and %s
-        #         GROUP BY 
-        #             prodid, product, prod_categ, location, date_in, lotserial, lotid
-        #         ORDER BY 
-        #             date_in ) TBL1 
-        #     LEFT JOIN
-        #         stock_production_lot LOT2 on LOT2.id = TBL1.lotid
-        #     LEFT JOIN
-        #         product_product prod2 on prod2.id = TBL1.prodid
-        # """
         
-        #self._cr.execute(query%(hours,hours,hours,where_product_ids,where_location_ids))
+        #raise UserError(query % self.env.user.company_id.id)
+
         self._cr.execute(query % self.env.user.company_id.id)
         result = self._cr.fetchall()
         if not result:
-            raise UserError('Data for Stock Inbound Report does not exist')
+            raise UserError('Data for Stock Outbound Report does not exist')
         fp = BytesIO()
         workbook = xlsxwriter.Workbook(fp)
         wbf, workbook = self.add_workbook_format(workbook)
