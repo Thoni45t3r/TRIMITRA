@@ -214,9 +214,17 @@ class ImportReceiptLine(models.TransientModel):
         if import_data:
             for row in import_data:
                 #Check master product
-                check_product = self.env['product.product'].search([('default_code','=',row['PRODUCT CODE'])])
+                product_no = row['PRODUCT CODE']
+                if isinstance(product_no,int) or isinstance(product_no,float):
+                    fractional, whole = math.modf(product_no)
+                    if fractional == 0:
+                        product_no = str(int(product_no))
+                    else:
+                        product_no = str(product_no)
+
+                check_product = self.env['product.product'].search([('default_code','=',product_no)])
                 if not check_product:
-                    raise UserError(_('Product %s does not exist in master data' % row['PRODUCT CODE']))
+                    raise UserError(_('Product %s does not exist in master data' % product_no))
                 else:
                     check_product = check_product[0]
                 #Check master UoM
@@ -372,7 +380,7 @@ class ImportReceiptLine(models.TransientModel):
                     if stock_picking.state in ['done','cancel']:
                         raise UserError(_('Stock Picking with Source Document %s already exist in the system with status %s, Source Document must be on other new value' % (ijno,stock_picking.state)))
 
-                #LAGI: lokasi tidak perlu, karena systemnya akan otomatis cari
+                #lokasi tidak perlu, karena systemnya akan otomatis cari
                 ##Check Source Location Pick
                 #check_loc = self.env['stock.location'].search([('complete_name','=ilike',_('%s%s' % ('%',row['BU'])))]) #complete_name
                 #if not check_loc:
@@ -519,7 +527,7 @@ class ImportReceiptLine(models.TransientModel):
                     if stock_picking.state in ['done','cancel']:
                         raise UserError(_('Stock Picking with Source Document %s already exist in the system with status %s, Source Document must be on other new value' % (ijno,stock_picking.state)))
 
-                #LAGI: lokasi tidak perlu, karena systemnya akan otomatis cari
+                #lokasi tidak perlu, karena systemnya akan otomatis cari
                 ##Check Source Location Pick
                 #check_loc = self.env['stock.location'].search([('complete_name','=ilike',_('%s%s' % ('%',row['LOCATION'])))]) #complete_name
                 #if not check_loc:
