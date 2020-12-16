@@ -267,10 +267,18 @@ class ImportReceiptLine(models.TransientModel):
 
                 #Check Stock.production.lot
                 #raise UserError(_('test: ijno = %s, Best before date = %s ' % (ijno,datetime(*xlrd.xldate_as_tuple(row['Best before date'], 0)))))
-                check_lot = self.env['stock.production.lot'].search([('name','=',row['BATCH']),('product_id','=',check_product.id)])
+                batchno = row['BATCH']
+                if isinstance(batchno,int) or isinstance(batchno,float):
+                    fractional, whole = math.modf(batchno)
+                    if fractional == 0:
+                        batchno = str(int(batchno))
+                    else:
+                        batchno = str(batchno)
+
+                check_lot = self.env['stock.production.lot'].search([('name','=',batchno),('product_id','=',check_product.id)])
                 if not check_lot:
                     check_lot = self.env['stock.production.lot'].create({
-                            'name': row['BATCH'],
+                            'name': batchno,
                             'product_id': check_product.id,
                             'ref': ijno,
                             'use_date': datetime(*xlrd.xldate_as_tuple(row['EXPIRED'], 0))
@@ -290,7 +298,7 @@ class ImportReceiptLine(models.TransientModel):
                         'product_uom_qty': row['QTY'],
                         'qty_done': qty_done,
                         'lot_id': check_lot.id,
-                        'lot_name': row['BATCH'],
+                        'lot_name': batchno,
                         'location_id': stock_picking.location_id.id,
                         'location_dest_id': stock_picking.location_dest_id.id
                         })
