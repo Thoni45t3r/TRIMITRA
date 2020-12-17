@@ -14,6 +14,7 @@ User mendapat file excel dari partner, file tersebut berisi data sku yang perlu 
     'depends': ['base',
                 'stock',
                 'product_expiry',
+                'fleet',
                 ],
     'demo': [],
     'data': [
