@@ -8,6 +8,9 @@
         <field name="arch" type="xml">
             <form>
                 <group>
+                    <div><label for="partner_id" string="Partner"/></div>
+                    <div><field name="partner_id"/></div>
+                    
                     <div><label for="picking_type_id" string="Operation Type"/></div>
                     <div><field name="picking_type_id"/></div>
 

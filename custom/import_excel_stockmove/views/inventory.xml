@@ -30,4 +30,117 @@
         </field>
     </record>
 
+    <template id="report_invoice_document"
+              inherit_id="stock.report_delivery_document">
+        
+        <!-- hapus PARTNER -->
+        <xpath expr="//t[@t-set='partner']" position="replace">
+            <div id="header1">
+                <h3 style="float: left; width: 100%; text-align: center;">
+                    <span>DELIVERY NOTE</span>
+                </h3>
+            </div>
+        </xpath>
+        
+        <!-- hapus h2 -->
+        <xpath expr="//div[@class='page']/h2" position="replace">
+        </xpath>
+        <xpath expr="//table[@class='table table-sm']" position="replace">
+            <div style="width: 100%;">
+                <table>
+                    <tr>
+                        <td>Reference Number (DO/SO Customer)</td><td>:</td><td t-if="o.origin"><span t-field="o.origin"/></td>
+                        <td>Truck Type</td><td>:</td><td><span t-field="o.fleet_id.model_id.name"/></td>
+                    </tr>
+                    <tr>
+                        <td>Outbound Number</td><td>:</td><td><span t-field="o.name"/></td>
+                        <td>Driver Name</td><td>:</td><td><span t-field="o.fleet_id.driver_id.name"/></td>
+                    </tr>
+                    <tr>
+                        <td>Outbound Date</td><td>:</td><td>
+                            <t t-if="o.state == 'done'">
+                                <span t-field="o.date_done" t-options='{"widget": "date"}'/>
+                            </t>
+                            <t t-if="o.state != 'done'">
+                                <span t-field="o.scheduled_date" t-options='{"widget": "date"}'/>
+                            </t>
+                        </td>
+                        <td>Police Number</td><td>:</td><td><span t-field="o.fleet_id.license_plate"/></td>
+                    </tr>
+                    <tr>
+                        <td>Vendor</td><td>:</td><td><span t-field="o.partner_id.name"/></td>
+                    </tr>
+                </table>
+            </div>
+        </xpath>
+
+        <xpath expr="//table[@class='table table-sm mt48']" position="replace">
+        </xpath>
+        <!--
+        <xpath expr="//div[@class='table table-sm']" position="replace">
+            <div style="width: 100%;">
+                <table t-if="o.state!='done'">
+                    <thead>
+                        <tr>
+                            <th><strong>Product</strong></th>
+                            <th><strong>Quantity</strong></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <t t-set="lines" t-value="o.move_lines.filtered(lambda x: x.product_uom_qty)"/>
+                        <tr t-foreach="lines" t-as="move">
+                            <td>
+                                <span t-field="move.product_id"/>
+                                <p t-if="o.picking_type_code == 'outgoing'">
+                                    <span t-field="move.product_id.sudo().description_pickingout"/>
+                                </p>
+                                <p t-if="o.picking_type_code == 'incoming'">
+                                    <span t-field="move.product_id.sudo().description_pickingin"/>
+                                </p>
+                            </td>
+                            <td>
+                                <span t-field="move.product_uom_qty"/>
+                                <span t-field="move.product_uom"/>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <table t-if="o.move_line_ids and o.state=='done'">
+                    <t t-set="has_serial_number" t-value="o.move_line_ids.mapped('lot_id')" />
+                    <thead>
+                        <tr>
+                            <th><strong>No</strong></th>
+                            <th><strong>Product Code</strong></th>
+                            <th><strong>Product Description</strong></th>
+                            <th><strong>Uom</strong></th>
+                            <th><strong>Batch#</strong></th>
+                            <th class="text-center"><strong>Qty</strong></th>
+                            <th class="text-center"><strong>Volume (CBM)</strong></th>
+                            <th class="text-center"><strong>Weight (Grams)</strong></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <t t-set="i" t-value="1"/>
+                        <t t-set="vol" t-value="0"/>
+                        <t t-set="weight" t-value="0"/>
+                        <tr t-foreach="o.move_line_ids" t-as="move_line">
+                            <td><t t-esc="i"/></td>
+                            <t t-set="vol" t-value="move_line.volume * move_line.qty_done"/>
+                            <t t-set="weight" t-value="move_line.weight * move_line.qty_done"/>
+                            <td><span t-field="move_line.product_id.default_code"/></td>
+                            <td><span t-field="move_line.product_id.name"/></td>
+                            <td><span t-field="move_line.product_uom_id"/></td>
+                            <td><span t-field="move_line.lot_id.name"/></td>
+                            <td><span t-field="move_line.qty_done"/></td>
+                            <td><t t-esc="vol"/></td>
+                            <td><t t-esc="weight"/></td>
+                            <t t-set="i" t-value="i+1"/>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>  
+        </xpath>
+        -->
+    </template>
+
 </odoo>
