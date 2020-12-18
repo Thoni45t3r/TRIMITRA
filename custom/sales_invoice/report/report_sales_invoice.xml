@@ -65,9 +65,9 @@
 									<td style="width: 34%; text-align: left;"><span t-esc="o.partner_id.mobile"/></td>
 								</tr>
 								<tr>
-									<td style="width: 13%; text-align: left;">No. SJ</td>
+									<td style="width: 13%; text-align: left;">No. SO</td>
 									<td style="width: 3%; text-align: left;">:</td>
-									<td style="width: 34%; text-align: left;"></td>
+									<td style="width: 34%; text-align: left;"><spin t-esc="o.origin"/></td>
 								</tr>
 							</table>
 						</td>
