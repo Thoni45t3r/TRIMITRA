@@ -9,6 +9,9 @@
 				<xpath expr="//button[@name='148']" position="after">
                      <button name="invoice_print" string="Print" type="object" icon="fa-print" states="done" attrs="{'invisible': [('state', '!=', 'open')]}" groups="account.group_account_invoice"/>
                 </xpath>
+				<xpath expr="//field[@name='discount2']" position="replace">
+                     <field name="discount2" string="Disc2 (%)"/>
+                </xpath>
 			</field>
 		</record>
 	</data>
