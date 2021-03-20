@@ -82,11 +82,11 @@
 							<tr>
 								<td rowspan="2" style="width: 3%; padding: 10px; border: 1px solid black; border-collapse: collapse; text-align: center"><b>No.</b></td>
 								<td rowspan="2" style="width: 17%; padding: 10px; border: 1px solid black; border-collapse: collapse; text-align: center"><b>Kode Barang</b></td>
-								<td rowspan="2" style="width: 26%; padding: 10px; border: 1px solid black; border-collapse: collapse; text-align: center"><b>Nama Barang</b></td>
+								<td rowspan="2" style="width: 24%; padding: 10px; border: 1px solid black; border-collapse: collapse; text-align: center"><b>Nama Barang</b></td>
 								<td rowspan="2" style="width: 7%; padding: 10px; border: 1px solid black; border-collapse: collapse; text-align: center"><b>Satuan</b></td>
 								<td rowspan="2" style="width: 7%; padding: 10px; border: 1px solid black; border-collapse: collapse; text-align: center"><b>Qty</b></td>
 								<td rowspan="2" style="width: 10%; padding: 10px; border: 1px solid black; border-collapse: collapse; text-align: center"><b>Harga</b></td>
-								<td rowspan="2" style="width: 14%; padding: 10px; border: 1px solid black; border-collapse: collapse; text-align: center"><b>Diskon</b></td>
+								<td rowspan="2" style="width: 16%; padding: 10px; border: 1px solid black; border-collapse: collapse; text-align: center"><b>Diskon</b></td>
 								<td rowspan="2" style="width: 16%; padding: 10px; border: 1px solid black; border-collapse: collapse; text-align: center"><b>Jumlah</b></td>
 							</tr>
 						</thead>
@@ -98,21 +98,21 @@
 									<t t-if = " line.discount2 == 0.0 ">
 										<td style="width: 4.65%; padding: 10px; border: 1px solid black; border-collapse: collapse; text-align: center"><t t-esc="i"/></td>
 										<td style="width: 16.25%; padding: 10px; border: 1px solid black; border-collapse: collapse; text-align: left"><span t-field="line.product_id.default_code"/></td>
-										<td style="width: 25.95%; padding: 10px; border: 1px solid black; border-collapse: collapse; text-align: left"><span t-field="line.product_id.product_tmpl_id.name"/></td>
+										<td style="width: 23.95%; padding: 10px; border: 1px solid black; border-collapse: collapse; text-align: left"><span t-field="line.product_id.product_tmpl_id.name"/></td>
 										<td style="width: 7.65%; padding: 10px; border: 1px solid black; border-collapse: collapse; text-align: center"><span t-field="line.uom_id.name"/></td>
 										<td style="width: 6.9%; padding: 10px; border: 1px solid black; border-collapse: collapse; text-align: center"><span t-esc="'%.0f' % line.quantity"/></td>
 										<td style="width: 9.9%; padding: 10px; border: 1px solid black; border-collapse: collapse; text-align: right"><span t-field="line.price_unit"/></td>
-										<td style="width: 14%; padding: 10px; border: 1px solid black; border-collapse: collapse; text-align: center"><span t-esc="'%.1f' % line.discount"/> % </td>
+										<td style="width: 16%; padding: 10px; border: 1px solid black; border-collapse: collapse; text-align: center"><span t-esc="'%.1f' % line.discount"/> % </td>
 										<td style="width: 16%; padding: 10px; border: 1px solid black; border-collapse: collapse; text-align: right"><span t-field="line.price_subtotal"/></td>
 									</t>
 									<t t-if = " line.discount2 != 0.0 ">
 										<td style="width: 4.65%; padding: 10px; border: 1px solid black; border-collapse: collapse; text-align: center"><t t-esc="i"/></td>
 										<td style="width: 16.25%; padding: 10px; border: 1px solid black; border-collapse: collapse; text-align: left"><span t-field="line.product_id.default_code"/></td>
-										<td style="width: 25.95%; padding: 10px; border: 1px solid black; border-collapse: collapse; text-align: left"><span t-field="line.product_id.product_tmpl_id.name"/></td>
+										<td style="width: 23.95%; padding: 10px; border: 1px solid black; border-collapse: collapse; text-align: left"><span t-field="line.product_id.product_tmpl_id.name"/></td>
 										<td style="width: 7.65%; padding: 10px; border: 1px solid black; border-collapse: collapse; text-align: center"><span t-field="line.uom_id.name"/></td>
 										<td style="width: 6.9%; padding: 10px; border: 1px solid black; border-collapse: collapse; text-align: center"><span t-esc="'%.0f' % line.quantity"/></td>
 										<td style="width: 9.9%; padding: 10px; border: 1px solid black; border-collapse: collapse; text-align: right"><span t-field="line.price_unit"/></td>
-										<td style="width: 14%; padding: 10px; border: 1px solid black; border-collapse: collapse; text-align: center"><span t-esc="'%.1f' % line.discount"/> % + <span t-esc="'%.1f' % line.discount2"/> % </td>
+										<td style="width: 16%; padding: 10px; border: 1px solid black; border-collapse: collapse; text-align: center"><span t-esc="'%.1f' % line.discount"/> % + <span t-esc="'%.1f' % line.discount2"/> % </td>
 										<td style="width: 16%; padding: 10px; border: 1px solid black; border-collapse: collapse; text-align: right"><span t-field="line.price_subtotal"/></td>
 									</t>
 								</tr>
