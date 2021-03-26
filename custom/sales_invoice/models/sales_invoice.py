@@ -17,3 +17,8 @@ class SalesInvoice(models.Model):
     @api.multi
     def invoice_print(self):
        return self.env.ref('sales_invoice.report_sales_invoice').report_action(self)
+       
+class SalesInvoiceLine(models.Model):
+    _inherit    = ['account.invoice.line']
+    
+    ppn = fields.Boolean(string='PPN')

@@ -29,6 +29,7 @@ class SalesOrder(models.Model):
             })
     
     discount2 = fields.Float(string='Discount2 (%)', default=0.00)
+    ppn       = fields.Boolean(string="PPN")
     
     price_subtotal = fields.Monetary(compute='_compute_amount', string='Subtotal', readonly=True, store=True)
     price_tax = fields.Float(compute='_compute_amount', string='Total Tax', readonly=True, store=True)
@@ -63,6 +64,7 @@ class SalesOrder(models.Model):
             'quantity': qty,
             'discount': self.discount,
             'discount2': self.discount2,
+            'ppn': self.ppn,
             'uom_id': self.product_uom.id,
             'product_id': self.product_id.id or False,
             'invoice_line_tax_ids': [(6, 0, self.tax_id.ids)],
