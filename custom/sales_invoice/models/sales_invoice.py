@@ -18,6 +18,14 @@ class SalesInvoice(models.Model):
     def invoice_print(self):
        return self.env.ref('sales_invoice.report_sales_invoice').report_action(self)
        
+    @api.multi
+    def invoice_print_ppn(self):
+       return self.env.ref('sales_invoice.report_sales_invoice').report_action(self)
+       
+    @api.multi
+    def invoice_print_nonppn(self):
+       return self.env.ref('sales_invoice.report_sales_invoice').report_action(self)
+       
 class SalesInvoiceLine(models.Model):
     _inherit    = ['account.invoice.line']
     
