@@ -90,7 +90,7 @@
 								<td rowspan="2" style="width: 16%; padding: 10px; border: 1px solid black; border-collapse: collapse; text-align: center"><b>Jumlah</b></td>
 							</tr>
 						</thead>
-						<tbody>
+						<tbody style="font-size:16px">
 							<t t-set="i" t-value="0"/>
 							<t t-foreach="o.invoice_line_ids" t-as="line">
 								<t t-set="i" t-value="i+1"/>
