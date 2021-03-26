@@ -13,7 +13,7 @@
                      <field name="discount2" string="Disc2 (%)"/>
                 </xpath>
 				<xpath expr="//field[@name='price_unit']" position="after">
-                     <field name="ppn" string="PPN" attrs="{'readonly': [('state','!=','draft')]}"/>
+                     <field name="ppn" string="PPN"/>
                 </xpath>
 			</field>
 		</record>
