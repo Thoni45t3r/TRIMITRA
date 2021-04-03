@@ -122,17 +122,18 @@
 								</tr>
 							</t>
 						</tbody>
-						<!--<table style="width: 100%;">
+						<table style="width: 100%;">
+						<t t-set="total" t-value="sum(line.price_subtotal for line in o.invoice_line_ids.filtered(lambda x: x.ppn==True))" t-options='{"widget": "float", "precision": 2}'/>
 						<tr>
 							<td style="width: 66.3%;">
 							<table>
 								<tr>
-									<td style="width: 7%; padding-left: 10px; text-align: left;">Terbilang :</td>
+									<td style="width: 7%; padding-left: 10px; text-align: left;"></td>
 									<td style="width: 66.3%; padding-left: 10px; text-align: left;"></td>
 								</tr>
 								<tr>
 									<td style="width: 7%; padding-left: 10px; text-align: left;"></td>
-									<td style="width: 66.3%; padding-left: 10px; text-align: left;"><span t-field="o.amount_to_text"/></td>
+									<td style="width: 66.3%; padding-left: 10px; text-align: left;"></td>
 								</tr>
 							</table>
 							</td>
@@ -140,16 +141,16 @@
 							<table>
 								<tr>
 									<td style="width: 10%; border-bottom: 1px solid black; border-collapse: collapse; padding-left: 10px; text-align: left;"><b>Sub Total</b></td>
-									<td style="width: 23.7%; border-bottom: 1px solid black; border-collapse: collapse; padding-right: 10px; text-align: right;"><span t-field="o.amount_untaxed"/></td>
+									<td style="width: 23.7%; border-bottom: 1px solid black; border-collapse: collapse; padding-right: 10px; text-align: right;">Rp <span t-esc="total" t-options='{"widget": "float", "precision": 2}'/></td>
 								</tr>
 								<tr>
 									<td style="width: 10%; border-bottom: 1px solid black; border-collapse: collapse; padding-left: 10px; text-align: left;"><b>Total</b></td>
-									<td style="width: 23.7%; border-bottom: 1px solid black; border-collapse: collapse; padding-right: 10px; text-align: right;"><span t-field="o.amount_total"/></td>
+									<td style="width: 23.7%; border-bottom: 1px solid black; border-collapse: collapse; padding-right: 10px; text-align: right;">Rp <span t-esc="total" t-options='{"widget": "float", "precision": 2}'/></td>
 								</tr>
 							</table>
 							</td>
 						</tr>
-						</table>-->
+						</table>
 					</table>
 					</div>
 				</div>

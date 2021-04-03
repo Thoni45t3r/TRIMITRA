@@ -31,3 +31,10 @@ class SalesInvoiceLine(models.Model):
     
     ppn = fields.Boolean(string='PPN')
     
+    @api.depends('invoice_line_ids.price_subtotal')
+    def _line_total(self):
+        for invoice in self:
+            line_total = 0.0
+            for line in invoice.invoice_line_ids:
+                line_total += line.price_subtotal
+    
