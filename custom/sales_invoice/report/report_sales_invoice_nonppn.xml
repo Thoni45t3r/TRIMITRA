@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+	<template id="report_sales_invoice_nonppn_template">
+		<t t-call="web.html_container">
+			<t t-call="web.external_layout">
+				<t t-foreach="docs" t-as="o">
+				<div style="text-align: left;margin: 0px;padding: 13px;">
+					<div id="header1" class="page" style="font-size:28px">
+						<tr style="text-align: left; width: 100%; font-size: 30px;">
+							<td style="font-size: 30px"><center><b>F A K T U R</b></center></td>
+						</tr>
+					</div>
+					<div id="header2" class="page" style="font-size:18px">
+						<table style="width: 100%; padding: 13px;">
+						<tr>
+						<td style="width:50%;">
+							<table>
+								<tr>
+									<td style="width: 13%; text-align: left;">No. Faktur</td>
+									<td style="width: 3%; text-align: left;">:</td>
+									<td style="width: 34%; text-align: left;"><span t-field="o.number"/></td>
+								</tr>
+								<tr>
+									<td style="width: 13%; text-align: left;">Tanggal Faktur</td>
+									<td style="width: 3%; text-align: left;">:</td>
+									<td style="width: 34%; text-align: left;"><span t-esc="o.date_invoice.strftime('%d %B %Y')"/></td>
+								</tr>
+								<tr>
+									<td style="width: 13%; text-align: left;">TOP</td>
+									<td style="width: 3%; text-align: left;">:</td>
+									<td style="width: 34%; text-align: left;"><span t-field="o.payment_term_id.name"/></td>
+								</tr>
+								<tr>
+									<td style="width: 13%; text-align: left;">Jatuh Tempo</td>
+									<td style="width: 3%; text-align: left;">:</td>
+									<td style="width: 34%; text-align: left;"><span t-esc="o.date_due.strftime('%d %B %Y')"/></td>
+								</tr>
+								<tr>
+									<td style="width: 13%; text-align: left;">Salesman</td>
+									<td style="width: 3%; text-align: left;">:</td>
+									<td style="width: 34%; text-align: left;"><span t-field="o.user_id.login"/></td>
+								</tr>
+							</table>
+						</td>
+						<td style="width: 50%;">
+							<table>
+								<tr>
+									<td style="width: 13%; text-align: left;">Nama Toko</td>
+									<td style="width: 3%; text-align: left;">:</td>
+									<td style="width: 34%; text-align: left;"><span t-esc="o.partner_id.display_name"/></td>
+								</tr>
+								<tr>
+									<td style="width: 13%; text-align: left;">Owner</td>
+									<td style="width: 3%; text-align: left;">:</td>
+									<td style="width: 34%; text-align: left;"><span t-esc="o.partner_id.name"/></td>
+								</tr>
+								<tr>
+									<td style="width: 13%; text-align: left;">Alamat</td>
+									<td style="width: 3%; text-align: left;">:</td>
+									<td style="width: 34%; text-align: left;"><span t-esc="o.partner_id.street"/></td>
+								</tr>
+								<tr>
+									<td style="width: 13%; text-align: left;">No. Telp</td>
+									<td style="width: 3%; text-align: left;">:</td>
+									<td style="width: 34%; text-align: left;"><span t-esc="o.partner_id.mobile"/></td>
+								</tr>
+								<tr>
+									<td style="width: 13%; text-align: left;">No. SO</td>
+									<td style="width: 3%; text-align: left;">:</td>
+									<td style="width: 34%; text-align: left;"><spin t-esc="o.origin"/></td>
+								</tr>
+							</table>
+						</td>
+						</tr>
+						</table>
+					</div>
+				</div>
+				<div class="page" style="font-size:18px">
+					<div style="-webkit-flex: 1; -ms-flex: 1; flex: 1; padding: 3px; width: 100%;">
+					<table class="table table-condensed table-bordered" style="width: 100%; padding: 10px; border: 1px solid black; border-collapse: collapse;">
+						<thead>
+							<tr>
+								<td rowspan="2" style="width: 3%; padding: 10px; border: 1px solid black; border-collapse: collapse; text-align: center"><b>No.</b></td>
+								<td rowspan="2" style="width: 17%; padding: 10px; border: 1px solid black; border-collapse: collapse; text-align: center"><b>Kode Barang</b></td>
+								<td rowspan="2" style="width: 24%; padding: 10px; border: 1px solid black; border-collapse: collapse; text-align: center"><b>Nama Barang</b></td>
+								<td rowspan="2" style="width: 7%; padding: 10px; border: 1px solid black; border-collapse: collapse; text-align: center"><b>Satuan</b></td>
+								<td rowspan="2" style="width: 7%; padding: 10px; border: 1px solid black; border-collapse: collapse; text-align: center"><b>Qty</b></td>
+								<td rowspan="2" style="width: 10%; padding: 10px; border: 1px solid black; border-collapse: collapse; text-align: center"><b>Harga</b></td>
+								<td rowspan="2" style="width: 16%; padding: 10px; border: 1px solid black; border-collapse: collapse; text-align: center"><b>Diskon</b></td>
+								<td rowspan="2" style="width: 16%; padding: 10px; border: 1px solid black; border-collapse: collapse; text-align: center"><b>Jumlah</b></td>
+							</tr>
+						</thead>
+						<tbody style="font-size:16px">
+							<t t-set="i" t-value="0"/>
+							<t t-foreach="o.invoice_line_ids" t-as="line">
+								<t t-set="i" t-value="i+1"/>
+								<tr>
+									<t t-if = " line.discount2 == 0.0 ">
+										<t t-if = "line.ppn != True">
+											<td style="width: 4.65%; padding: 10px; border: 1px solid black; border-collapse: collapse; text-align: center"><t t-esc="i"/></td>
+											<td style="width: 16.25%; padding: 10px; border: 1px solid black; border-collapse: collapse; text-align: left"><span t-field="line.product_id.default_code"/></td>
+											<td style="width: 23.95%; padding: 10px; border: 1px solid black; border-collapse: collapse; text-align: left"><span t-field="line.product_id.product_tmpl_id.name"/></td>
+											<td style="width: 7.65%; padding: 10px; border: 1px solid black; border-collapse: collapse; text-align: center"><span t-field="line.uom_id.name"/></td>
+											<td style="width: 6.9%; padding: 10px; border: 1px solid black; border-collapse: collapse; text-align: center"><span t-esc="'%.0f' % line.quantity"/></td>
+											<td style="width: 9.9%; padding: 10px; border: 1px solid black; border-collapse: collapse; text-align: right"><span t-field="line.price_unit"/></td>
+											<td style="width: 16%; padding: 10px; border: 1px solid black; border-collapse: collapse; text-align: center"><span t-esc="'%.1f' % line.discount"/> % </td>
+											<td style="width: 16%; padding: 10px; border: 1px solid black; border-collapse: collapse; text-align: right"><span t-field="line.price_subtotal"/></td>
+										</t>
+									</t>
+									<t t-if = " line.discount2 != 0.0 ">
+										<t  t-if = "line.ppn != True">
+											<td style="width: 4.65%; padding: 10px; border: 1px solid black; border-collapse: collapse; text-align: center"><t t-esc="i"/></td>
+											<td style="width: 16.25%; padding: 10px; border: 1px solid black; border-collapse: collapse; text-align: left"><span t-field="line.product_id.default_code"/></td>
+											<td style="width: 23.95%; padding: 10px; border: 1px solid black; border-collapse: collapse; text-align: left"><span t-field="line.product_id.product_tmpl_id.name"/></td>
+											<td style="width: 7.65%; padding: 10px; border: 1px solid black; border-collapse: collapse; text-align: center"><span t-field="line.uom_id.name"/></td>
+											<td style="width: 6.9%; padding: 10px; border: 1px solid black; border-collapse: collapse; text-align: center"><span t-esc="'%.0f' % line.quantity"/></td>
+											<td style="width: 9.9%; padding: 10px; border: 1px solid black; border-collapse: collapse; text-align: right"><span t-field="line.price_unit"/></td>
+											<td style="width: 16%; padding: 10px; border: 1px solid black; border-collapse: collapse; text-align: center"><span t-esc="'%.1f' % line.discount"/> % + <span t-esc="'%.1f' % line.discount2"/> % </td>
+											<td style="width: 16%; padding: 10px; border: 1px solid black; border-collapse: collapse; text-align: right"><span t-field="line.price_subtotal"/></td>
+										</t>
+									</t>
+								</tr>
+							</t>
+						</tbody>
+						<!--<table style="width: 100%;">
+						<tr>
+							<td style="width: 66.3%;">
+							<table>
+								<tr>
+									<td style="width: 7%; padding-left: 10px; text-align: left;">Terbilang :</td>
+									<td style="width: 66.3%; padding-left: 10px; text-align: left;"></td>
+								</tr>
+								<tr>
+									<td style="width: 7%; padding-left: 10px; text-align: left;"></td>
+									<td style="width: 66.3%; padding-left: 10px; text-align: left;"><span t-field="o.amount_to_text"/></td>
+								</tr>
+							</table>
+							</td>
+							<td style="width: 33.7%;">
+							<table>
+								<tr>
+									<td style="width: 10%; border-bottom: 1px solid black; border-collapse: collapse; padding-left: 10px; text-align: left;"><b>Sub Total</b></td>
+									<td style="width: 23.7%; border-bottom: 1px solid black; border-collapse: collapse; padding-right: 10px; text-align: right;"><span t-esc="sum(line.price_subtotal for line in o.invoice_line_ids.filtered(lambda x: x.ppn!=True))"/></td>
+								</tr>
+								<tr>
+									<td style="width: 10%; border-bottom: 1px solid black; border-collapse: collapse; padding-left: 10px; text-align: left;"><b>Total</b></td>
+									<td style="width: 23.7%; border-bottom: 1px solid black; border-collapse: collapse; padding-right: 10px; text-align: right;"><span t-esc="sum(line.price_subtotal for line in o.invoice_line_ids.filtered(lambda x: x.ppn!=True))"/></td>
+								</tr>
+							</table>
+							</td>
+						</tr>
+						</table>-->
+					</table>
+					</div>
+				</div>
+				</t>
+				<div class="page" style="font-size:18px">
+					<p/>
+					<table style="width: 100%; padding: 13px;">
+						<tr style="width: 100%;">
+							<td style="width: 33%; padding: 10px; text-align: center;">Diterima oleh,</td>
+							<td style="width: 34%; padding: 10px; text-align: center;"></td>
+							<td style="width: 33%; padding: 10px; text-align: center;">Hormat Kami,</td>
+						</tr>
+						<tr style="width: 100%;">
+							<td style="width: 33%; padding: 10px; text-align: center;">_______________________________________</td>
+							<td style="width: 34%; padding: 10px; text-align: center;"></td>
+							<td style="width: 33%; padding: 10px; text-align: center;">_______________________________________</td>
+						</tr>
+					</table>
+				</div>
+			</t>
+		</t>
+	</template>
+</odoo>

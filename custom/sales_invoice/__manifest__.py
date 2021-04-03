@@ -34,6 +34,8 @@ Preference:
                     'views/sales_invoice_views.xml',
                     'views/action_report.xml',
                     'report/report_sales_invoice.xml',
+                    'report/report_sales_invoice_ppn.xml',
+                    'report/report_sales_invoice_nonppn.xml',
                     ],
     'installable'   : True,
     'application'   : True,

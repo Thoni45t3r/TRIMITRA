@@ -23,4 +23,20 @@
             name="sales_invoice.report_sales_invoice_template"
             paperformat="paperformat_report_sales_invoice"
             menu="False"/>
+			
+	<report id="report_sales_invoice_ppn"
+            model="account.invoice"
+            string="Report Sales Invoice PPN"
+            report_type="qweb-pdf"
+            name="sales_invoice.report_sales_invoice_ppn_template"
+            paperformat="paperformat_report_sales_invoice"
+            menu="False"/>
+			
+	<report id="report_sales_invoice_nonppn"
+            model="account.invoice"
+            string="Report Sales Invoice Non PPN"
+            report_type="qweb-pdf"
+            name="sales_invoice.report_sales_invoice_nonppn_template"
+            paperformat="paperformat_report_sales_invoice"
+            menu="False"/>
 </odoo>
