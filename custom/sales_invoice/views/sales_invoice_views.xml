@@ -6,10 +6,10 @@
             <field name="model">account.invoice</field>
             <field name="inherit_id" ref="account.invoice_form" />
             <field name="arch" type="xml">		
-				<xpath expr="//button[@name='action_invoice_sent']" position="replace">
+				<xpath expr="//button[@name='148']" position="after">
                      <button name="invoice_print" string="Print" type="object" icon="fa-print" states="done" attrs="{'invisible': [('state', '!=', 'open')]}" groups="account.group_account_invoice"/>
                 </xpath>
-				<xpath expr="//button[@name='148']" position="replace">
+				<xpath expr="//button[@name='invoice_print']" position="after">
                      <button name="invoice_print_ppn" string="Print PPN" type="object" icon="fa-print" states="done" attrs="{'invisible': [('state', '!=', 'open')]}" groups="account.group_account_invoice"/>
                 </xpath>
 				<xpath expr="//button[@name='invoice_print_ppn']" position="after">
