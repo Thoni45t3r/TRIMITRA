@@ -25,7 +25,7 @@
 		</record>
 		
 		<template id="external_layout_background_new">
-			<div class="article o_report_layout_clean" t-att-data-oe-model="o and o._name" t-att-data-oe-id="o and o.id" t-att-data-oe-lang="o and o.env.context.get('lang')" style="margin: 0px">
+			<div class="article o_report_layout_standard" t-att-data-oe-model="o and o._name" t-att-data-oe-id="o and o.id" t-att-data-oe-lang="o and o.env.context.get('lang')" style="margin: 0px">
 				<t t-call="web.address_layout"/>
 				<t t-raw="0"/>
 			</div>
